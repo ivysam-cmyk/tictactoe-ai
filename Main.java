@@ -25,6 +25,7 @@ public class Main {
     // 3. ask p1 to make a move 
     public String askPlayerMove() {
         String choice = "";
+        boolean whetherInt = true;
         do{
             Scanner playerMove = new Scanner(System.in);
             System.out.println("You can choose one of the blank spaces, choose the row and column.");
@@ -32,8 +33,13 @@ public class Main {
             choice = playerMove.nextLine();
             playerMove.close();
             System.out.println("Your move is: " + choice);
-            // keep asking until player inputs right format and blank space
-        }while(choice.length() !=2);
+            // keep asking until player inputs right format(is a number and 2 digits)
+            try{
+                int testInt = Integer.parseInt(choice);
+            } catch (Exception e){
+                whetherInt = false;
+            }
+        }while(whetherInt && choice.length()!=2);
 
         return choice;
     }
