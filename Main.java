@@ -74,6 +74,22 @@ public class Main {
         return new String[0][0];
     }
 
+    public void prettyPrint(){
+        // takes the board and prints it in a better way
+        // go through each element, whatever is not null, record down its String and index
+        String columns = "0 1 2"; 
+        String seperator = "-----";
+        String firstRow = "0|"+board[0][0]+"    |";
+        String secondRow = "1|     |";
+        String thirdRow = "2|     |";
+        System.out.println(columns);
+        System.out.println(seperator);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        
+    }
     public static void main(String[] args) {
        Main game = new Main(); 
     }
