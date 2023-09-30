@@ -24,6 +24,11 @@ public class Main {
     // 1. make a board
     public String[][] boardCreator(){
         board = new String[3][3];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+               board[i][j] = " "; 
+            }
+        } 
         return board;
     }
     // 2. assign players X or O
@@ -69,7 +74,7 @@ public class Main {
         } else {
             inputValue = "O";
         }
-        if(board[rowPosition][colPosition] == null){
+        if(board[rowPosition][colPosition].equals(" ")){
             board[rowPosition][colPosition] = inputValue;
             return board;
         } else {
@@ -82,8 +87,9 @@ public class Main {
 
     public void prettyPrint(){
         // takes the board and prints it in a better way
-        String columns = "   0     1    2"; 
-        String seperator = "-----------------";
+        String columns = "  0 1 2"; 
+        String seperator = "--------";
+
         String firstRow = "0|"+board[0][0]+" "+board[0][1]+" "+board[0][2]+"|";
         String secondRow = "1|"+board[1][0]+" "+board[1][1]+" "+board[1][2]+"|";
         String thirdRow = "2|"+board[2][0]+" "+board[2][1]+" "+board[2][2]+"|";
