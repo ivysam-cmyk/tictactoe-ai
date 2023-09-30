@@ -4,6 +4,7 @@
 3. ask p1 to make a move
     -> make sure that spot is blank
 4. change the board and print it
+    -> need to check if the position is valid and keep asking until valid pos
 5. p2(comp) to make move and repeat step 4
     -> minmax algo
 6. repeat until win/lose/draw for p1

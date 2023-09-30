@@ -1,25 +1,25 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static String[][] board;
+    // placeholder
+    public static boolean gameEnd = true;
     public static boolean whetherFirstTurn = true;
+    // create one scanner and use as opening and closing new scanners produces Exceptions
     public Scanner scann = new Scanner(System.in);
-    // init function
     public Main() {
         boardCreator();
-        // create one scanner and use as opening and closing new scanners produces Exceptions
         whetherFirstTurn = whetherFirstTurn();
         // there is some kind of loop here so that player and com keep on answering until the game ends
         // need a check to know if the game ends
-        // while(gameEnd == true){
+        while(gameEnd == true){
             prettyPrint();
-            changeBoard(askPlayerMove());
+            askPlayerMove();
             prettyPrint();
             // com moves 
             prettyPrint();
 
-        // }
+        }
     }
     // 1. make a board
     public String[][] boardCreator(){
@@ -40,7 +40,7 @@ public class Main {
     }
 
     // 3. ask p1 to make a move 
-    public String askPlayerMove() {
+    public void askPlayerMove() {
         String choicePos = "";
         boolean whetherInt = true;
         do{
@@ -55,8 +55,7 @@ public class Main {
                 whetherInt = false;
             }
         }while(whetherInt && choicePos.length()!=2);
-
-        return choicePos;
+        changeBoard(choicePos);
     }
     // 4. change the board and print it
     public String[][] changeBoard(String position){
@@ -70,8 +69,14 @@ public class Main {
         } else {
             inputValue = "O";
         }
-        board[rowPosition][colPosition] = inputValue;
-
+        if(board[rowPosition][colPosition] == null){
+            board[rowPosition][colPosition] = inputValue;
+            return board;
+        } else {
+            System.out.println("Position already filled, try again!");
+            askPlayerMove();
+        }
+        
         return new String[0][0];
     }
 
