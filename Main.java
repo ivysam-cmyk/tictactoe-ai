@@ -56,9 +56,12 @@ public class Main {
             // keep asking until player inputs right format(is a number and 2 digits)
             try{
                 int testInt = Integer.parseInt(choicePos);
+            // to catch the exception if it is not a num
             } catch (Exception e){
+                System.out.println("Enter a number of length 2!");
                 whetherInt = false;
             }
+        // keep asking until it is a number and length 2
         }while(whetherInt && choicePos.length()!=2);
         changeBoard(choicePos);
     }
@@ -78,7 +81,7 @@ public class Main {
             board[rowPosition][colPosition] = inputValue;
             return board;
         } else {
-            System.out.println("Position already filled, try again!");
+            System.out.println("Position "+ position +" already filled, try again!");
             askPlayerMove();
         }
         
@@ -101,6 +104,25 @@ public class Main {
         System.out.println(thirdRow);
         System.out.println(seperator);
         
+    }
+    public String getWinner(String[][] board) {
+       /* returns either X or O on who wins */ 
+        for (int i = 0; i < board.length; i++) {
+            // hor
+            if((board[i][0].equals(board[i][1])) && (board[i][1].equals(board[i][2]))){
+                return board[0][1];
+            }
+            // ver
+            if((board[0][i].equals(board[1][i])) && (board[1][i].equals(board[2][i]))){
+                return board[0][1];
+            }
+        }
+            // diag
+            if(((board[0][0].equals(board[1][1])) && (board[1][1].equals(board[2][2]))) || 
+            ((board[2][0].equals(board[1][1])) && (board[1][1].equals(board[0][2])))){
+                return board[1][1];
+            }
+        return "";
     }
     public static void main(String[] args) {
        Main game = new Main(); 
