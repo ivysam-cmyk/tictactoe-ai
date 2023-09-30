@@ -12,10 +12,14 @@ public class Main {
         whetherFirstTurn = whetherFirstTurn();
         // there is some kind of loop here so that player and com keep on answering until the game ends
         // need a check to know if the game ends
-        for (String[] row : board) {
-            System.out.println(Arrays.toString(row));
-        }
-        changeBoard(askPlayerMove());
+        // while(gameEnd == true){
+            prettyPrint();
+            changeBoard(askPlayerMove());
+            prettyPrint();
+            // com moves 
+            prettyPrint();
+
+        // }
     }
     // 1. make a board
     public String[][] boardCreator(){
@@ -68,26 +72,23 @@ public class Main {
         }
         board[rowPosition][colPosition] = inputValue;
 
-        for (String[] row : board) {
-            System.out.println(Arrays.toString(row));
-        }
         return new String[0][0];
     }
 
     public void prettyPrint(){
         // takes the board and prints it in a better way
-        // go through each element, whatever is not null, record down its String and index
-        String columns = "0 1 2"; 
-        String seperator = "-----";
-        String firstRow = "0|"+board[0][0]+"    |";
-        String secondRow = "1|     |";
-        String thirdRow = "2|     |";
+        String columns = "   0     1    2"; 
+        String seperator = "-----------------";
+        String firstRow = "0|"+board[0][0]+" "+board[0][1]+" "+board[0][2]+"|";
+        String secondRow = "1|"+board[1][0]+" "+board[1][1]+" "+board[1][2]+"|";
+        String thirdRow = "2|"+board[2][0]+" "+board[2][1]+" "+board[2][2]+"|";
+
         System.out.println(columns);
         System.out.println(seperator);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
+        System.out.println(firstRow);
+        System.out.println(secondRow);
+        System.out.println(thirdRow);
+        System.out.println(seperator);
         
     }
     public static void main(String[] args) {
