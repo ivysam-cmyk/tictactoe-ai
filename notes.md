@@ -1,10 +1,6 @@
-1. make a board
-2. assign players X or O
-    -> ask player whether they want to play first(X) or second(O)
-3. ask p1 to make a move
-    -> make sure that spot is blank
-4. change the board and print it
-    -> need to check if the position is valid and keep asking until valid pos
-5. p2(comp) to make move and repeat step 4
-    -> minmax algo
-6. repeat until win/lose/draw for p1
+<!-- for tryToWin -->
+to check if one move causes com to win
+go through each move from all legal moves
+for each move, changeBoard, find endgameCheck and see who wins
+current prob: endgame() only returns t/f, make it return both [t/f,x/o/tie] in an array
+if no winning move is found, then use any random move
