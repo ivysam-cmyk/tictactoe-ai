@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     public static String[][] board;
+    public static String[][] boardCopy;
     // placeholder
     public static String[] endgameArray = new String[2];
     public static boolean whetherFirstTurn = true;
@@ -44,7 +45,9 @@ public class Main {
         String moveToUse = "";
         String moveToUseToGetTie = "";
         for (String move : move_ArrayList){
-            String[] outcomeArray = endgameCheck(changeBoard(move, true));
+            // create a copy of the board, everytime you want to see what a move does to a board
+            boardCopy = board.clone();
+            String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true));
             if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
             } else if (outcomeArray[1].equals("tie")){
@@ -59,7 +62,7 @@ public class Main {
            moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
         }
         
-        changeBoard(moveToUse, true);
+        changeBoard(board, moveToUse, true);
         
     }
     // 1. make a board
@@ -104,10 +107,10 @@ public class Main {
             }
         // keep asking until it is a number and length 2
         }while(whetherInt && choicePos.length()!=2);
-        changeBoard(choicePos, false);
+        changeBoard(board, choicePos, false);
     }
     // 4. change the board and print it
-    public String[][] changeBoard(String position, boolean compTurn){
+    public String[][] changeBoard(String[][] board, String position, boolean compTurn){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
             // com move
