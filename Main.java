@@ -62,6 +62,8 @@ public class Main {
            moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
         }
         
+        System.out.println("the move to use is...");
+        System.out.println(moveToUse);
         changeBoard(board, moveToUse, true);
         
     }
@@ -79,7 +81,7 @@ public class Main {
     public boolean whetherFirstTurn(){
         System.out.println("Do you want to play first? Type y or n");
         String choice = scann.nextLine();
-        if(choice == "n"){
+        if(choice.equals("n")){
             System.out.println("You will play second your symbol is 'O'");
             return false;
         }
@@ -110,20 +112,23 @@ public class Main {
         changeBoard(board, choicePos, false);
     }
     // 4. change the board and print it
-    public String[][] changeBoard(String[][] board, String position, boolean compTurn){
+    public String[][] changeBoard(String[][] boardToBeChanged, String position, boolean compTurn){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
             // com move
 
             // return board
-        if(board[rowPosition][colPosition].equals(" ")){
+        if(boardToBeChanged[rowPosition][colPosition].equals(" ")){
             if(compTurn){
-                board[rowPosition][colPosition] = comChar;
-                return board;
+                boardToBeChanged[rowPosition][colPosition] = comChar;
+                return boardToBeChanged;
             }
-            board[rowPosition][colPosition] = playerChar;
-            return board;
+            boardToBeChanged[rowPosition][colPosition] = playerChar;
+            return boardToBeChanged;
         } else {
+            System.out.println("The position at "+ position+ " is...");
+            System.out.println(boardToBeChanged[rowPosition][colPosition]);
+            prettyPrint();
             System.out.println("Position "+ position +" already filled, try again!");
             askPlayerMove();
         }
