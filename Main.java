@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -18,14 +19,32 @@ public class Main {
         }
         // there is some kind of loop here so that player and com keep on answering until the game ends
         // need a check to know if the game ends
-        while(gameEnd == true){
+        while(!endgameCheck(board)){
             prettyPrint();
             askPlayerMove();
             prettyPrint();
             // com moves 
+            comMove();
             prettyPrint();
+            endgameCheck(board);
 
         }
+    }
+    public void comMove() {
+        ArrayList<String> move_ArrayList = new ArrayList<>();
+        // if there is a blank, record it
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(board[i][j].equals(" ")){
+                    // convert to String b4 concat
+                    String index = Integer.toString(i)+ Integer.toString(j);
+                    move_ArrayList.add(index);
+                }
+            }
+        }
+        String position = move_ArrayList.get((int)(Math.random() * move_ArrayList.size()));
+        changeBoard(position, true);
+        
     }
     // 1. make a board
     public String[][] boardCreator(){
@@ -75,11 +94,14 @@ public class Main {
     public String[][] changeBoard(String position, boolean compTurn){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
-        if(compTurn){
             // com move
+
             // return board
-        }
         if(board[rowPosition][colPosition].equals(" ")){
+            if(compTurn){
+                board[rowPosition][colPosition] = comChar;
+                return board;
+            }
             board[rowPosition][colPosition] = playerChar;
             return board;
         } else {
@@ -107,32 +129,40 @@ public class Main {
         System.out.println(seperator);
         
     }
-    public String getWinner(String[][] board) {
-       /* returns either X or O on who wins */ 
+    public boolean endgameCheck(String[][] board) {
+        // first check if any one wins, 
+        // then check if not all spaces are filled, then game hasn't ended
+        // if finally, all spaces are filled and no one wins, it is a tie
         for (int i = 0; i < board.length; i++) {
             // hor
             if((board[i][0].equals(board[i][1])) && (board[i][1].equals(board[i][2]))){
-                return board[0][1];
+                System.out.println(board[0][1] + "wins");
+                return true;
+                
             }
             // ver
             if((board[0][i].equals(board[1][i])) && (board[1][i].equals(board[2][i]))){
-                return board[0][1];
+                System.out.println(board[0][1] + "wins");
+                return true;
             }
         }
-            // diag
-            if(((board[0][0].equals(board[1][1])) && (board[1][1].equals(board[2][2]))) || 
-            ((board[2][0].equals(board[1][1])) && (board[1][1].equals(board[0][2])))){
-                return board[1][1];
-            }
-
+        // diag
+        if(((board[0][0].equals(board[1][1])) && (board[1][1].equals(board[2][2]))) || 
+        ((board[2][0].equals(board[1][1])) && (board[1][1].equals(board[0][2])))){
+            System.out.println(board[1][1] + "wins");
+            return true;
+        }
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 if(board[i][j].equals(" ")){
-                    return "game not over yet";
+                    System.out.println("game not over yet");
+                    return false;
                 }
             } 
         }
-        return "Tie";
+        
+        System.out.println("Tie");
+        return true;
     }
     public static void main(String[] args) {
        Main game = new Main(); 
