@@ -18,15 +18,28 @@ public class Main {
             playerChar = "X";
             comChar = "O";
         }
-        while((endgameCheck(board))[0] == "false"){
-            prettyPrint();
-            askPlayerMove();
-            prettyPrint();
-            System.out.println("---------");
-            System.out.println("com moves");
-            comMove();
-            prettyPrint();
-            endgameCheck(board);
+        if(whetherFirstTurn){
+            while((endgameCheck(board))[0] == "false"){
+                prettyPrint();
+                askPlayerMove();
+                prettyPrint();
+                System.out.println("---------");
+                System.out.println("com moves");
+                comMove();
+                prettyPrint();
+                endgameCheck(board);
+            }
+        }else{
+            while((endgameCheck(board))[0] == "false"){
+                prettyPrint();
+                comMove();
+                prettyPrint();
+                System.out.println("---------");
+                System.out.println("player moves");
+                askPlayerMove();
+                prettyPrint();
+                endgameCheck(board);
+            }
         }
     }
     public void comMove() {
@@ -112,22 +125,22 @@ public class Main {
         changeBoard(board, choicePos, false);
     }
     // 4. change the board and print it
-    public String[][] changeBoard(String[][] boardToBeChanged, String position, boolean compTurn){
+    public String[][] changeBoard(String[][] board, String position, boolean compTurn){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
             // com move
 
             // return board
-        if(boardToBeChanged[rowPosition][colPosition].equals(" ")){
+        if(board[rowPosition][colPosition].equals(" ")){
             if(compTurn){
-                boardToBeChanged[rowPosition][colPosition] = comChar;
-                return boardToBeChanged;
+                board[rowPosition][colPosition] = comChar;
+                return board;
             }
-            boardToBeChanged[rowPosition][colPosition] = playerChar;
-            return boardToBeChanged;
+            board[rowPosition][colPosition] = playerChar;
+            return board;
         } else {
             System.out.println("The position at "+ position+ " is...");
-            System.out.println(boardToBeChanged[rowPosition][colPosition]);
+            System.out.println(board[rowPosition][colPosition]);
             prettyPrint();
             System.out.println("Position "+ position +" already filled, try again!");
             askPlayerMove();
