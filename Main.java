@@ -36,7 +36,7 @@ public class Main {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 if(board[i][j].equals(" ")){
-                    // convert to String b4 concat
+                    // can't concat int, so make it string first
                     String index = Integer.toString(i)+ Integer.toString(j);
                     move_ArrayList.add(index);
                 }
@@ -136,12 +136,20 @@ public class Main {
         for (int i = 0; i < board.length; i++) {
             // hor
             if((board[i][0].equals(board[i][1])) && (board[i][1].equals(board[i][2]))){
+                // ignore if all blanks and check the other rows
+                if(board[i][0].equals(" ")){
+                    continue;
+                }
                 System.out.println(board[0][1] + "wins");
                 return true;
                 
             }
             // ver
             if((board[0][i].equals(board[1][i])) && (board[1][i].equals(board[2][i]))){
+                // ignore if all blanks
+                if(board[0][i].equals(" ")){
+                    continue;
+                }
                 System.out.println(board[0][1] + "wins");
                 return true;
             }
@@ -150,7 +158,13 @@ public class Main {
         if(((board[0][0].equals(board[1][1])) && (board[1][1].equals(board[2][2]))) || 
         ((board[2][0].equals(board[1][1])) && (board[1][1].equals(board[0][2])))){
             System.out.println(board[1][1] + "wins");
-            return true;
+                // ignore if all blanks
+                if(board[1][1].equals(" ")){
+                    // do nothing
+                }
+                else{
+                    return true;
+                }
         }
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
