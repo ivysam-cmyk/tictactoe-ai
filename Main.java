@@ -54,6 +54,7 @@ public class Main {
                 }
             }
         }
+        System.out.println(move_ArrayList);
         String moveToUse = "";
         String moveToUseToGetTie = "";
         for (String move : move_ArrayList){
@@ -69,7 +70,7 @@ public class Main {
             System.out.println("after using changeBoard, board changes something happens in above line");
             prettyPrint(board);
             // if the computer is winning,
-            if(outcomeArray[1].equals("true") && outcomeArray[1].equals(comChar)){
+            if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
             } else if (outcomeArray[1].equals("tie")){
                 moveToUseToGetTie = move; 
