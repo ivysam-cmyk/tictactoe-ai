@@ -73,8 +73,8 @@ public class Main {
             }
 
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true));
-            System.out.println("after using changeBoard, board changes something happens in above line");
-            prettyPrint(board);
+            // play as the player to find which pos to block
+            String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopy, move, false));
             // if the computer is winning,
             if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
@@ -82,8 +82,8 @@ public class Main {
                 moveToUseToGetTie = move; 
             }
         }
-        System.out.println("done going through all the legal moves");
-        // if no winning move was found, use any random
+        // if no winning move was found, use any move that blocks losing
+
         if(moveToUse.length() == 0 && moveToUseToGetTie.length() != 0){
             // use the move that results in tie
             moveToUse = moveToUseToGetTie;
