@@ -22,6 +22,9 @@ public class Main {
                 prettyPrint(board);
                 askPlayerMove();
                 prettyPrint(board);
+                if((endgameCheck(board))[0] == "true"){
+                    break;
+                }
                 System.out.println("---------");
                 System.out.println("com moves");
                 comMove();
@@ -33,6 +36,9 @@ public class Main {
                 prettyPrint(board);
                 comMove();
                 prettyPrint(board);
+                if((endgameCheck(board))[0] == "true"){
+                    break;
+                }
                 System.out.println("---------");
                 System.out.println("player moves");
                 askPlayerMove();
@@ -185,8 +191,8 @@ public class Main {
                 if(board[i][0].equals(" ")){
                     continue;
                 }
-                System.out.println(board[0][1] + " wins");
-                return new String[] {"true", board[0][1]};
+                System.out.println(board[i][1] + " wins");
+                return new String[] {"true", board[i][1]};
                 
             }
             // ver
@@ -195,19 +201,16 @@ public class Main {
                 if(board[0][i].equals(" ")){
                     continue;
                 }
-                System.out.println(board[0][1] + " wins");
-                return new String[] {"true", board[0][1]};
+                System.out.println(board[0][i] + " wins");
+                return new String[] {"true", board[0][i]};
             }
         }
         // diag
         if(((board[0][0].equals(board[1][1])) && (board[1][1].equals(board[2][2]))) || 
         ((board[2][0].equals(board[1][1])) && (board[1][1].equals(board[0][2])))){
-            System.out.println(board[1][1] + "wins");
                 // ignore if all blanks
-                if(board[1][1].equals(" ")){
-                    // do nothing
-                }
-                else{
+                if(!board[1][1].equals(" ")){
+                    System.out.println(board[1][1] + " wins");
                     return new String[] {"true", board[1][1]};
                 }
         }
