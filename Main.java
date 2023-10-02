@@ -1,10 +1,9 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static String[][] board;
-    public static String[][] boardCopy;
-    // placeholder
     public static String[] endgameArray = new String[2];
     public static boolean whetherFirstTurn = true;
     public String playerChar = "O";
@@ -20,24 +19,24 @@ public class Main {
         }
         if(whetherFirstTurn){
             while((endgameCheck(board))[0] == "false"){
-                prettyPrint();
+                prettyPrint(board);
                 askPlayerMove();
-                prettyPrint();
+                prettyPrint(board);
                 System.out.println("---------");
                 System.out.println("com moves");
                 comMove();
-                prettyPrint();
+                prettyPrint(board);
                 endgameCheck(board);
             }
         }else{
             while((endgameCheck(board))[0] == "false"){
-                prettyPrint();
+                prettyPrint(board);
                 comMove();
-                prettyPrint();
+                prettyPrint(board);
                 System.out.println("---------");
                 System.out.println("player moves");
                 askPlayerMove();
-                prettyPrint();
+                prettyPrint(board);
                 endgameCheck(board);
             }
         }
@@ -59,14 +58,24 @@ public class Main {
         String moveToUseToGetTie = "";
         for (String move : move_ArrayList){
             // create a copy of the board, everytime you want to see what a move does to a board
-            boardCopy = board.clone();
+            String[][] boardCopy = new String[3][3];
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                   boardCopy[i][j] = board[i][j];
+                }
+            }
+
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true));
-            if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
+            System.out.println("after using changeBoard, board changes something happens in above line");
+            prettyPrint(board);
+            // if the computer is winning,
+            if(outcomeArray[1].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
             } else if (outcomeArray[1].equals("tie")){
                 moveToUseToGetTie = move; 
             }
         }
+        System.out.println("done going through all the legal moves");
         // if no winning move was found, use any random
         if(moveToUse.length() == 0 && moveToUseToGetTie.length() != 0){
             // use the move that results in tie
@@ -111,7 +120,6 @@ public class Main {
             System.out.println("You can choose one of the blank spaces, choose the row and column.");
             System.out.println("Example if you want to choose the middle spot, write 11.");
             choicePos = scann.nextLine();
-            System.out.println("Your move is: " + choicePos);
             // keep asking until player inputs right format(is a number and 2 digits)
             try{
                 int testInt = Integer.parseInt(choicePos);
@@ -125,23 +133,21 @@ public class Main {
         changeBoard(board, choicePos, false);
     }
     // 4. change the board and print it
-    public String[][] changeBoard(String[][] board, String position, boolean compTurn){
+    public String[][] changeBoard(String[][] boardToBeChanged, String position, boolean compTurn){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
-            // com move
 
-            // return board
-        if(board[rowPosition][colPosition].equals(" ")){
+        if(boardToBeChanged[rowPosition][colPosition].equals(" ")){
             if(compTurn){
-                board[rowPosition][colPosition] = comChar;
-                return board;
+                System.out.println("pos is blank and compTurn");
+                boardToBeChanged[rowPosition][colPosition] = comChar;
+                return boardToBeChanged;
             }
-            board[rowPosition][colPosition] = playerChar;
-            return board;
+            boardToBeChanged[rowPosition][colPosition] = playerChar;
+            return boardToBeChanged;
         } else {
             System.out.println("The position at "+ position+ " is...");
-            System.out.println(board[rowPosition][colPosition]);
-            prettyPrint();
+            System.out.println(boardToBeChanged[rowPosition][colPosition]);
             System.out.println("Position "+ position +" already filled, try again!");
             askPlayerMove();
         }
@@ -149,7 +155,7 @@ public class Main {
         return new String[0][0];
     }
 
-    public void prettyPrint(){
+    public void prettyPrint(String[][] board){
         // takes the board and prints it in a better way
         String columns = "  0 1 2"; 
         String seperator = "--------";
