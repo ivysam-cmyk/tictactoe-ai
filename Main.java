@@ -47,6 +47,7 @@ public class Main {
             }
         }
     }
+
     public void comMove() {
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // first get all the possible moves and then for everyone of them
@@ -93,14 +94,14 @@ public class Main {
         }
         // order : win,block loss, random(tie), random
         // if no winning move was found, use any move that blocks losing
-        if(moveToUse.length() == 0){
+        if(moveToUse.length()==0){
             moveToUse = moveToBlock;
         } 
-        if(moveToUse.length() == 0){
+        if(moveToUse.length()==0){
             // use the move that results in tie
             moveToUse = moveToUseToGetTie;
         }
-        if (moveToUse.length() ==0){
+        if (moveToUse.length()==0){
             moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
             System.out.println("random move is produced"); 
         }
