@@ -62,33 +62,47 @@ public class Main {
         }
         System.out.println(move_ArrayList);
         String moveToUse = "";
+        String moveToBlock = "";
         String moveToUseToGetTie = "";
         for (String move : move_ArrayList){
             // create a copy of the board, everytime you want to see what a move does to a board
             String[][] boardCopy = new String[3][3];
+            String[][] boardCopyAlt = new String[3][3];
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[0].length; j++) {
                    boardCopy[i][j] = board[i][j];
+                   boardCopyAlt[i][j] = board[i][j];
                 }
             }
 
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true));
             // play as the player to find which pos to block
-            String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopy, move, false));
+            String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopyAlt, move, false));
+            System.out.println("Where com can win: "+ Arrays.toString(outcomeArray));
+            System.out.println("Where player can win: "+ Arrays.toString(outcomeArrayAlt));
             // if the computer is winning,
             if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
             } else if (outcomeArray[1].equals("tie")){
                 moveToUseToGetTie = move; 
             }
+            // if the computer is losing,
+            if(outcomeArrayAlt[0].equals("true") && outcomeArrayAlt[1].equals(playerChar)){
+                moveToBlock = move;
+            }
         }
+        // order : win,block loss, random(tie), random
         // if no winning move was found, use any move that blocks losing
-
-        if(moveToUse.length() == 0 && moveToUseToGetTie.length() != 0){
+        if(moveToUse.length() == 0){
+            moveToUse = moveToBlock;
+        } 
+        if(moveToUse.length() == 0){
             // use the move that results in tie
             moveToUse = moveToUseToGetTie;
-        } else if (moveToUse.length() == 0 && moveToUseToGetTie.length() ==0){
-           moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
+        }
+        if (moveToUse.length() ==0){
+            moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
+            System.out.println("random move is produced"); 
         }
         
         System.out.println("the move to use is...");
