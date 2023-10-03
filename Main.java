@@ -4,47 +4,34 @@ import java.util.Scanner;
 
 public class Main {
     public static String[][] board;
+    public static String[] listOfAI = {"random_ai", "winOnly", "winAndBlockLose"};
+    String playerOne;
+    String playerTwo;
     public static String[] endgameArray = new String[2];
-    public static boolean whetherFirstTurn = true;
     public String playerChar = "O";
     public String comChar = "X";
     // create one scanner and use as opening and closing new scanners spawns Exceptions
     public Scanner scann = new Scanner(System.in);
     public Main() {
         boardCreator();
-        whetherFirstTurn = whetherFirstTurn();
+        whetherFirstTurn = askForWhichCom();
+        // assignChars
         if(whetherFirstTurn){
             playerChar = "X";
             comChar = "O";
         }
-        if(whetherFirstTurn){
-            while((endgameCheck(board))[0] == "false"){
-                prettyPrint(board);
-                askPlayerMove();
-                prettyPrint(board);
-                if((endgameCheck(board))[0] == "true"){
-                    break;
-                }
-                System.out.println("---------");
-                System.out.println("com moves");
-                comMove();
-                prettyPrint(board);
-                endgameCheck(board);
+        while((endgameCheck(board))[0] == "false"){
+            prettyPrint(board);
+            comMove();
+            prettyPrint(board);
+            if((endgameCheck(board))[0] == "true"){
+                break;
             }
-        }else{
-            while((endgameCheck(board))[0] == "false"){
-                prettyPrint(board);
-                comMove();
-                prettyPrint(board);
-                if((endgameCheck(board))[0] == "true"){
-                    break;
-                }
-                System.out.println("---------");
-                System.out.println("player moves");
-                askPlayerMove();
-                prettyPrint(board);
-                endgameCheck(board);
-            }
+            System.out.println("---------");
+            System.out.println("player moves");
+            askPlayerMove();
+            prettyPrint(board);
+            endgameCheck(board);
         }
     }
 
@@ -121,16 +108,19 @@ public class Main {
         } 
         return board;
     }
-    // 2. assign players X or O
-    public boolean whetherFirstTurn(){
-        System.out.println("Do you want to play first? Type y or n");
+    // get the number assigned to the ai and determine who that belongs to(using an array)
+    public boolean askForWhichCom(){
+        System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
+        System.out.println("1. random_ai");
+        System.out.println("2. choose winning spot ai");
+        System.out.println("3. choose winning spot and block losing spot ai");
+        System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
+        System.out.println("--------------------------------");
         String choice = scann.nextLine();
-        if(choice.equals("n")){
-            System.out.println("You will play second your symbol is 'O'");
-            return false;
-        }
-        System.out.println("You will play first your symbol is 'X'");
-        // trigger the player making move function
+
+        // figure out the choice and subsequently p1 and p2
+        playerOne = listOfAI[Integer.parseInt(choice.substring(0, 1))]; 
+        playerTwo = listOfAI[Integer.parseInt(choice.substring(1))]; 
         return true;
     }
 
