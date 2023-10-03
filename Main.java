@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     public static String[][] board;
-    public static String[] listOfAI = {"random_ai", "winOnly", "winAndBlockLose"};
+    public static String[] listOfAI = {random_ai(), winOnly(), winAndBlockLose()};
     String playerOne;
     String playerTwo;
     public static String[] endgameArray = new String[2];
@@ -14,15 +14,11 @@ public class Main {
     public Scanner scann = new Scanner(System.in);
     public Main() {
         boardCreator();
-        whetherFirstTurn = askForWhichCom();
+        askForWhichCom();
         // assignChars
-        if(whetherFirstTurn){
-            playerChar = "X";
-            comChar = "O";
-        }
         while((endgameCheck(board))[0] == "false"){
             prettyPrint(board);
-            comMove();
+            winAndBlockLose();
             prettyPrint(board);
             if((endgameCheck(board))[0] == "true"){
                 break;
@@ -35,7 +31,7 @@ public class Main {
         }
     }
 
-    public void comMove() {
+    public void winAndBlockLose() {
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // first get all the possible moves and then for everyone of them
         // check if endgame produces false for player/ true for com and use that move
@@ -109,7 +105,7 @@ public class Main {
         return board;
     }
     // get the number assigned to the ai and determine who that belongs to(using an array)
-    public boolean askForWhichCom(){
+    public void askForWhichCom(){
         System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
         System.out.println("1. random_ai");
         System.out.println("2. choose winning spot ai");
@@ -117,11 +113,9 @@ public class Main {
         System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
         System.out.println("--------------------------------");
         String choice = scann.nextLine();
-
         // figure out the choice and subsequently p1 and p2
         playerOne = listOfAI[Integer.parseInt(choice.substring(0, 1))]; 
         playerTwo = listOfAI[Integer.parseInt(choice.substring(1))]; 
-        return true;
     }
 
     // 3. ask p1 to make a move 
