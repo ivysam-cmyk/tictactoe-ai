@@ -27,10 +27,26 @@ public class Main {
             endgameCheck(board);
         }
     }
+    
+    public void random_ai(String comChar) {
+        ArrayList<String> move_ArrayList = new ArrayList<>();
+        // if there is a blank, record it
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(board[i][j].equals(" ")){
+                    // convert to String b4 concat
+                    String index = Integer.toString(i)+ Integer.toString(j);
+                    move_ArrayList.add(index);
+                }
+            }
+        }
+        String position = move_ArrayList.get((int)(Math.random() * move_ArrayList.size()));
+        changeBoard(board, position, true, comChar);
+    }
 
     public void winAndBlockLose(String comChar) {
             // figure out the chars for both AIs
-            String playerChar;
+            String playerChar = "";
             switch (comChar){
                 case "X":
                     playerChar = "O";
@@ -68,7 +84,7 @@ public class Main {
 
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
             // play as the player to find which pos to block
-            String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopyAlt, move, false));
+            String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopyAlt, move, false,playerChar));
             System.out.println("Where com can win: "+ Arrays.toString(outcomeArray));
             System.out.println("Where player can win: "+ Arrays.toString(outcomeArrayAlt));
             // if the computer is winning,
@@ -101,22 +117,7 @@ public class Main {
         changeBoard(board, moveToUse, true, comChar);
         
     }
-    public void random_ai(String playerChar) {
-        ArrayList<String> move_ArrayList = new ArrayList<>();
-        // if there is a blank, record it
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if(board[i][j].equals(" ")){
-                    // convert to String b4 concat
-                    String index = Integer.toString(i)+ Integer.toString(j);
-                    move_ArrayList.add(index);
-                }
-            }
-        }
-        String position = move_ArrayList.get((int)(Math.random() * move_ArrayList.size()));
-        changeBoard(board, position, true);
-        
-    }
+    
     // 1. make a board
     public String[][] boardCreator(){
         board = new String[3][3];
