@@ -5,13 +5,12 @@ import java.util.Scanner;
 public class Main {
     // gameStart is to make sure that person is only asked which AI once
     boolean gameStart;
-    public static String[][] board;
-    public static String[] listOfAI = {random_ai(), winOnly(), winAndBlockLose()};
     int playerOne;
     int playerTwo;
+    public static String[][] board;
     public static String[] endgameArray = new String[2];
-    public String playerChar = "O";
-    public String comChar = "X";
+    public String playerOneChar = "X";
+    public String playerTwoChar = "O";
     // create one scanner and use as opening and closing new scanners spawns Exceptions
     public Scanner scann = new Scanner(System.in);
     public Main() {
@@ -21,20 +20,25 @@ public class Main {
         while((endgameCheck(board))[0] == "false"){
             askOnceRunMultipleAI();
             prettyPrint(board);
-            winAndBlockLose();
-            prettyPrint(board);
             if((endgameCheck(board))[0] == "true"){
                 break;
             }
-            System.out.println("---------");
-            System.out.println("player moves");
-            askPlayerMove();
             prettyPrint(board);
             endgameCheck(board);
         }
     }
 
-    public void winAndBlockLose() {
+    public void winAndBlockLose(String comChar) {
+            // figure out the chars for both AIs
+            String playerChar;
+            switch (comChar){
+                case "X":
+                    playerChar = "O";
+                    break;
+                case "O":
+                    playerChar = "X";
+                    break;
+            }
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // first get all the possible moves and then for everyone of them
         // check if endgame produces false for player/ true for com and use that move
@@ -62,7 +66,7 @@ public class Main {
                 }
             }
 
-            String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true));
+            String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
             // play as the player to find which pos to block
             String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopyAlt, move, false));
             System.out.println("Where com can win: "+ Arrays.toString(outcomeArray));
@@ -94,10 +98,10 @@ public class Main {
         
         System.out.println("the move to use is...");
         System.out.println(moveToUse);
-        changeBoard(board, moveToUse, true);
+        changeBoard(board, moveToUse, true, comChar);
         
     }
-    public void random_ai() {
+    public void random_ai(String playerChar) {
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // if there is a blank, record it
         for (int i = 0; i < board.length; i++) {
@@ -127,7 +131,7 @@ public class Main {
     public void askOnceRunMultipleAI(){
         // will only run per game
         String choice;
-        if(gameStart == true){
+        while(gameStart == true || playerOne == playerTwo){
             System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
             System.out.println("1. random_ai");
             System.out.println("2. choose winning spot ai");
@@ -136,10 +140,10 @@ public class Main {
             System.out.println("--------------------------------");
             choice = scann.nextLine();
             gameStart = false;
+            playerOne = Integer.parseInt(choice.substring(0, 1)); 
+            playerTwo = Integer.parseInt(choice.substring(1)); 
         }
         // figure out the choice and subsequently p1 and p2
-        playerOne = Integer.parseInt(choice.substring(0, 1)); 
-        playerTwo = Integer.parseInt(choice.substring(1)); 
         switch (playerOne){
             case 1:
                 random_ai(); 
@@ -165,28 +169,8 @@ public class Main {
 
     }
 
-    // 3. ask p1 to make a move 
-    public void askPlayerMove() {
-        String choicePos = "";
-        boolean whetherInt = true;
-        do{
-            System.out.println("You can choose one of the blank spaces, choose the row and column.");
-            System.out.println("Example if you want to choose the middle spot, write 11.");
-            choicePos = scann.nextLine();
-            // keep asking until player inputs right format(is a number and 2 digits)
-            try{
-                int testInt = Integer.parseInt(choicePos);
-            // to catch the exception if it is not a num
-            } catch (Exception e){
-                System.out.println("Enter a number of length 2!");
-                whetherInt = false;
-            }
-        // keep asking until it is a number and length 2
-        }while(whetherInt && choicePos.length()!=2);
-        changeBoard(board, choicePos, false);
-    }
     // 4. change the board and print it
-    public String[][] changeBoard(String[][] boardToBeChanged, String position, boolean compTurn){
+    public String[][] changeBoard(String[][] boardToBeChanged, String position, boolean compTurn, String comChar){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
 
@@ -196,13 +180,21 @@ public class Main {
                 boardToBeChanged[rowPosition][colPosition] = comChar;
                 return boardToBeChanged;
             }
+            String playerChar = "";
+            switch (comChar){
+                case "X":
+                    playerChar = "O";
+                    break;
+                case "O":
+                    playerChar = "X";
+                    break;
+            }
             boardToBeChanged[rowPosition][colPosition] = playerChar;
             return boardToBeChanged;
         } else {
             System.out.println("The position at "+ position+ " is...");
             System.out.println(boardToBeChanged[rowPosition][colPosition]);
             System.out.println("Position "+ position +" already filled, try again!");
-            askPlayerMove();
         }
         
         return new String[0][0];
