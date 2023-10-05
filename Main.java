@@ -118,6 +118,55 @@ public class Main {
         
     }
     
+    public void winOnly(String comChar) {
+        ArrayList<String> move_ArrayList = new ArrayList<>();
+        // first get all the possible moves and then for everyone of them
+        // check if endgame produces false for player/ true for com and use that move
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(board[i][j].equals(" ")){
+                    // can't concat int, so make it string first
+                    String index = Integer.toString(i)+ Integer.toString(j);
+                    move_ArrayList.add(index);
+                }
+            }
+        }
+        System.out.println(move_ArrayList);
+        String moveToUse = "";
+        String moveToUseToGetTie = "";
+        for (String move : move_ArrayList){
+            // create a copy of the board, everytime you want to see what a move does to a board
+            String[][] boardCopy = new String[3][3];
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[0].length; j++) {
+                   boardCopy[i][j] = board[i][j];
+                }
+            }
+
+            String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
+            System.out.println("after using changeBoard, board changes something happens in above line");
+            prettyPrint(board);
+            // if the computer is winning,
+            if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
+                moveToUse = move;
+            } else if (outcomeArray[1].equals("tie")){
+                moveToUseToGetTie = move; 
+            }
+        }
+        System.out.println("done going through all the legal moves");
+        // if no winning move was found, use any random
+        if(moveToUse.length() == 0 && moveToUseToGetTie.length() != 0){
+            // use the move that results in tie
+            moveToUse = moveToUseToGetTie;
+        } else if (moveToUse.length() == 0 && moveToUseToGetTie.length() ==0){
+           moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
+        }
+        
+        System.out.println("the move to use is...");
+        System.out.println(moveToUse);
+        changeBoard(board, moveToUse, true, comChar);
+        
+    }
     // 1. make a board
     public String[][] boardCreator(){
         board = new String[3][3];
@@ -147,24 +196,25 @@ public class Main {
         // figure out the choice and subsequently p1 and p2
         switch (playerOne){
             case 1:
-                random_ai(); 
+                random_ai("X"); 
                 break;
             case 2:
-                winOnly();
+                winOnly("X");
                 break;
             case 3:
-                winAndBlockLose();
+                winAndBlockLose("X");
                 break;
         }
+
         switch (playerTwo){
             case 1:
-                random_ai(); 
+                random_ai("O"); 
                 break;
             case 2:
-                winOnly();
+                winOnly("O");
                 break;
             case 3:
-                winAndBlockLose();
+                winAndBlockLose("O");
                 break;
         }
 
