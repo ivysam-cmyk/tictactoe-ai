@@ -3,10 +3,12 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+    // gameStart is to make sure that person is only asked which AI once
+    boolean gameStart;
     public static String[][] board;
     public static String[] listOfAI = {random_ai(), winOnly(), winAndBlockLose()};
-    String playerOne;
-    String playerTwo;
+    int playerOne;
+    int playerTwo;
     public static String[] endgameArray = new String[2];
     public String playerChar = "O";
     public String comChar = "X";
@@ -14,9 +16,10 @@ public class Main {
     public Scanner scann = new Scanner(System.in);
     public Main() {
         boardCreator();
-        askForWhichCom();
+        gameStart = true;
         // assignChars
         while((endgameCheck(board))[0] == "false"){
+            askOnceRunMultipleAI();
             prettyPrint(board);
             winAndBlockLose();
             prettyPrint(board);
@@ -94,6 +97,22 @@ public class Main {
         changeBoard(board, moveToUse, true);
         
     }
+    public void random_ai() {
+        ArrayList<String> move_ArrayList = new ArrayList<>();
+        // if there is a blank, record it
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(board[i][j].equals(" ")){
+                    // convert to String b4 concat
+                    String index = Integer.toString(i)+ Integer.toString(j);
+                    move_ArrayList.add(index);
+                }
+            }
+        }
+        String position = move_ArrayList.get((int)(Math.random() * move_ArrayList.size()));
+        changeBoard(board, position, true);
+        
+    }
     // 1. make a board
     public String[][] boardCreator(){
         board = new String[3][3];
@@ -105,17 +124,45 @@ public class Main {
         return board;
     }
     // get the number assigned to the ai and determine who that belongs to(using an array)
-    public void askForWhichCom(){
-        System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
-        System.out.println("1. random_ai");
-        System.out.println("2. choose winning spot ai");
-        System.out.println("3. choose winning spot and block losing spot ai");
-        System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
-        System.out.println("--------------------------------");
-        String choice = scann.nextLine();
+    public void askOnceRunMultipleAI(){
+        // will only run per game
+        String choice;
+        if(gameStart == true){
+            System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
+            System.out.println("1. random_ai");
+            System.out.println("2. choose winning spot ai");
+            System.out.println("3. choose winning spot and block losing spot ai");
+            System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
+            System.out.println("--------------------------------");
+            choice = scann.nextLine();
+            gameStart = false;
+        }
         // figure out the choice and subsequently p1 and p2
-        playerOne = listOfAI[Integer.parseInt(choice.substring(0, 1))]; 
-        playerTwo = listOfAI[Integer.parseInt(choice.substring(1))]; 
+        playerOne = Integer.parseInt(choice.substring(0, 1)); 
+        playerTwo = Integer.parseInt(choice.substring(1)); 
+        switch (playerOne){
+            case 1:
+                random_ai(); 
+                break;
+            case 2:
+                winOnly();
+                break;
+            case 3:
+                winAndBlockLose();
+                break;
+        }
+        switch (playerTwo){
+            case 1:
+                random_ai(); 
+                break;
+            case 2:
+                winOnly();
+                break;
+            case 3:
+                winAndBlockLose();
+                break;
+        }
+
     }
 
     // 3. ask p1 to make a move 
