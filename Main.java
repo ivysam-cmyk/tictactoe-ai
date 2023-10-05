@@ -20,10 +20,6 @@ public class Main {
         while((endgameCheck(board))[0] == "false"){
             askOnceRunMultipleAI();
             prettyPrint(board);
-            if((endgameCheck(board))[0] == "true"){
-                break;
-            }
-            prettyPrint(board);
             endgameCheck(board);
         }
     }
@@ -145,7 +141,6 @@ public class Main {
 
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
             System.out.println("after using changeBoard, board changes something happens in above line");
-            prettyPrint(board);
             // if the computer is winning,
             if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
