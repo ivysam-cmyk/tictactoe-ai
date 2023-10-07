@@ -12,8 +12,5 @@ show winner
 possible choices
 12 21 13 31 23 32 
 -------------------------------------------
-how to check win condition for multiple AIs
-
-prev: algo was always comChar
-sol: pass in parameter into algo which is char
-for changeBoard: comChar is the function calling it and the other
+find out the AI which wins
+when you get the char which wins set an if condition

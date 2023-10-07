@@ -9,6 +9,7 @@ public class Main {
     int playerTwo;
     public static String[][] board;
     public static String[] endgameArray = new String[2];
+    public static String[] AIArray = {"random_ai", "winOnly", "winAndBlockLose"};
     public String playerOneChar = "X";
     public String playerTwoChar = "O";
     // create one scanner and use as opening and closing new scanners spawns Exceptions
@@ -20,7 +21,15 @@ public class Main {
         while((endgameCheck(board))[0] == "false"){
             askOnceRunMultipleAI();
             prettyPrint(board);
-            endgameCheck(board);
+        }
+
+        String gameEndOutcome = endgameCheck(board)[1];
+        if(gameEndOutcome == "X"){
+            String winner = AIArray[playerOne-1];
+            System.out.println(winner+" wins.");
+        }else if (gameEndOutcome == "O"){
+            String winner = AIArray[playerTwo-1];
+            System.out.println(winner+" wins.");
         }
     }
     
@@ -275,7 +284,6 @@ public class Main {
                 if(board[i][0].equals(" ")){
                     continue;
                 }
-                System.out.println(board[i][1] + " wins");
                 return new String[] {"true", board[i][1]};
                 
             }
@@ -285,7 +293,6 @@ public class Main {
                 if(board[0][i].equals(" ")){
                     continue;
                 }
-                System.out.println(board[0][i] + " wins");
                 return new String[] {"true", board[0][i]};
             }
         }
@@ -294,7 +301,6 @@ public class Main {
         ((board[2][0].equals(board[1][1])) && (board[1][1].equals(board[0][2])))){
                 // ignore if all blanks
                 if(!board[1][1].equals(" ")){
-                    System.out.println(board[1][1] + " wins");
                     return new String[] {"true", board[1][1]};
                 }
         }
