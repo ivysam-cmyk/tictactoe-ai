@@ -37,7 +37,7 @@ public class Main {
         for(int i=0 ; i<repeatNum; i++){
             boardCreator();
             gameStart = true;
-            // assignChars
+            // keep making moves until the game ends
             while((endgameCheck(board))[0] == "false"){
                 askOnceRunMultipleAI(playerOne, playerTwo);
                 prettyPrint(board);
@@ -70,16 +70,36 @@ public class Main {
                         winAndBlockLoseWins++;
                 }
             }
-
-            System.out.println("wins by random_ai: " + random_aiWins);
+            System.out.println("wins by random_ai: "+ random_aiWins);
             System.out.println("wins by winsOnly AI: "+ winOnlyWins);
-            System.out.println("wins by WinAndBlockLose AI: "+ winAndBlockLoseWins);
+            System.out.println("wins by winAndBlockLose AI: "+ winAndBlockLoseWins);
         }
-        float random_aiWinsPercentage = (random_aiWins/repeatNum)*100;
-        float winOnlyWinsPercentage = (winOnlyWins/repeatNum)*100;
-        float winAndBlockLoseWinsPercentage = (winAndBlockLoseWins/repeatNum)*100;
-        System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
-        System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
+        switch (playerOne){
+            case(1):
+                float random_aiWinsPercentage = ( (float) random_aiWins/repeatNum)*100;
+                System.out.println("Percentage of wins by random AI: "+ random_aiWinsPercentage);
+                break;
+            case(2):
+                float winOnlyWinsPercentage = ( (float) winOnlyWins/repeatNum)*100;
+                System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
+                break;
+            case(3):
+                float winAndBlockLoseWinsPercentage = ( (float) winAndBlockLoseWins/repeatNum)*100;
+                System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
+        }
+        switch (playerTwo){
+            case(1):
+                float random_aiWinsPercentage = ( (float) random_aiWins/repeatNum)*100;
+                System.out.println("Percentage of wins by random AI: "+ random_aiWinsPercentage);
+                break;
+            case(2):
+                float winOnlyWinsPercentage = ( (float) winOnlyWins/repeatNum)*100;
+                System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
+                break;
+            case(3):
+                float winAndBlockLoseWinsPercentage = ( (float) winAndBlockLoseWins/repeatNum)*100;
+                System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
+        }
     }
     
     public void random_ai(String comChar) {
@@ -212,6 +232,7 @@ public class Main {
             // use the move that results in tie
             moveToUse = moveToUseToGetTie;
         } else if (moveToUse.length() == 0 && moveToUseToGetTie.length() ==0){
+            System.out.println(move_ArrayList.size());
            moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
         }
         

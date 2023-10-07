@@ -10,7 +10,7 @@ print board after each move
 show winner
 
 possible choices
-12 21 13 31 23 32 
+12 21 13 31 23 32
 -------------------------------------------
-keep a 3 variables (int) for each AI. increment when they win.
-then, in the end divide by repeatNum and *100 
+
+only find the wins for p1 and p2
