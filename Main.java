@@ -18,6 +18,20 @@ public class Main {
     // create one scanner and use as opening and closing new scanners spawns Exceptions
     public Scanner scann = new Scanner(System.in);
     public Main() {
+        while(gameStart == true || playerOne == playerTwo){
+            String choice;
+            System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
+            System.out.println("1. random_ai");
+            System.out.println("2. choose winning spot ai");
+            System.out.println("3. choose winning spot and block losing spot ai");
+            System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
+            System.out.println("--------------------------------");
+            choice = scann.nextLine();
+            gameStart = false;
+            playerOne = Integer.parseInt(choice.substring(0, 1)); 
+            playerTwo = Integer.parseInt(choice.substring(1)); 
+        }
+
         System.out.println("Enter the number of times you wish to run the game");
         int repeatNum = Integer.parseInt(scann.nextLine());
         for(int i=0 ; i<repeatNum; i++){
@@ -25,11 +39,12 @@ public class Main {
             gameStart = true;
             // assignChars
             while((endgameCheck(board))[0] == "false"){
-                askOnceRunMultipleAI();
+                askOnceRunMultipleAI(playerOne, playerTwo);
                 prettyPrint(board);
             }
     
             String gameEndOutcome = endgameCheck(board)[1];
+            // if X wins, increment the playerOne AI
             if(gameEndOutcome == "X"){
                 String winner = AIArray[playerOne-1];
                 switch(playerOne){
@@ -55,11 +70,14 @@ public class Main {
                         winAndBlockLoseWins++;
                 }
             }
+
+            System.out.println("wins by random_ai: " + random_aiWins);
+            System.out.println("wins by winsOnly AI: "+ winOnlyWins);
+            System.out.println("wins by WinAndBlockLose AI: "+ winAndBlockLoseWins);
         }
         float random_aiWinsPercentage = (random_aiWins/repeatNum)*100;
         float winOnlyWinsPercentage = (winOnlyWins/repeatNum)*100;
         float winAndBlockLoseWinsPercentage = (winAndBlockLoseWins/repeatNum)*100;
-        System.out.println("Percentage of wins by random_ai: " + random_aiWinsPercentage);
         System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
         System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
     }
@@ -213,21 +231,8 @@ public class Main {
         return board;
     }
     // get the number assigned to the ai and determine who that belongs to(using an array)
-    public void askOnceRunMultipleAI(){
+    public void askOnceRunMultipleAI(int playerOne, int playerTwo){
         // will only run per game
-        String choice;
-        while(gameStart == true || playerOne == playerTwo){
-            System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
-            System.out.println("1. random_ai");
-            System.out.println("2. choose winning spot ai");
-            System.out.println("3. choose winning spot and block losing spot ai");
-            System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
-            System.out.println("--------------------------------");
-            choice = scann.nextLine();
-            gameStart = false;
-            playerOne = Integer.parseInt(choice.substring(0, 1)); 
-            playerTwo = Integer.parseInt(choice.substring(1)); 
-        }
         // figure out the choice and subsequently p1 and p2
         switch (playerOne){
             case 1:
@@ -239,7 +244,6 @@ public class Main {
             case 3:
                 winAndBlockLose("X");
         }
-
         switch (playerTwo){
             case 1:
                 random_ai("O"); 
