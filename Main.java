@@ -7,6 +7,9 @@ public class Main {
     boolean gameStart;
     int playerOne;
     int playerTwo;
+    static int random_aiWins = 0;
+    static int winOnlyWins = 0;
+    static int winAndBlockLoseWins = 0;
     public static String[][] board;
     public static String[] endgameArray = new String[2];
     public static String[] AIArray = {"random_ai", "winOnly", "winAndBlockLose"};
@@ -15,22 +18,50 @@ public class Main {
     // create one scanner and use as opening and closing new scanners spawns Exceptions
     public Scanner scann = new Scanner(System.in);
     public Main() {
-        boardCreator();
-        gameStart = true;
-        // assignChars
-        while((endgameCheck(board))[0] == "false"){
-            askOnceRunMultipleAI();
-            prettyPrint(board);
+        System.out.println("Enter the number of times you wish to run the game");
+        int repeatNum = Integer.parseInt(scann.nextLine());
+        for(int i=0 ; i<repeatNum; i++){
+            boardCreator();
+            gameStart = true;
+            // assignChars
+            while((endgameCheck(board))[0] == "false"){
+                askOnceRunMultipleAI();
+                prettyPrint(board);
+            }
+    
+            String gameEndOutcome = endgameCheck(board)[1];
+            if(gameEndOutcome == "X"){
+                String winner = AIArray[playerOne-1];
+                switch(playerOne){
+                    case 1:
+                        random_aiWins++;
+                        break;
+                    case 2:
+                        winOnlyWins++;
+                        break;
+                    case 3:
+                        winAndBlockLoseWins++;
+                }
+            }else if (gameEndOutcome == "O"){
+                String winner = AIArray[playerTwo-1];
+                switch(playerTwo){
+                    case 1:
+                        random_aiWins++;
+                        break;
+                    case 2:
+                        winOnlyWins++;
+                        break;
+                    case 3:
+                        winAndBlockLoseWins++;
+                }
+            }
         }
-
-        String gameEndOutcome = endgameCheck(board)[1];
-        if(gameEndOutcome == "X"){
-            String winner = AIArray[playerOne-1];
-            System.out.println(winner+" wins.");
-        }else if (gameEndOutcome == "O"){
-            String winner = AIArray[playerTwo-1];
-            System.out.println(winner+" wins.");
-        }
+        float random_aiWinsPercentage = (random_aiWins/repeatNum)*100;
+        float winOnlyWinsPercentage = (winOnlyWins/repeatNum)*100;
+        float winAndBlockLoseWinsPercentage = (winAndBlockLoseWins/repeatNum)*100;
+        System.out.println("Percentage of wins by random_ai: " + random_aiWinsPercentage);
+        System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
+        System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
     }
     
     public void random_ai(String comChar) {
@@ -207,7 +238,6 @@ public class Main {
                 break;
             case 3:
                 winAndBlockLose("X");
-                break;
         }
 
         switch (playerTwo){
