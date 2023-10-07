@@ -14,3 +14,6 @@ possible choices
 -------------------------------------------
 
 only find the wins for p1 and p2
+Bug: eventhough the board is full, game still calls askOnce... causing index error
+bug occurs as we only check for endgame after both AIs have played, instead,
+should check after each one plays

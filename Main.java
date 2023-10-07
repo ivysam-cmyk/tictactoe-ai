@@ -39,8 +39,13 @@ public class Main {
             gameStart = true;
             // keep making moves until the game ends
             while((endgameCheck(board))[0] == "false"){
-                askOnceRunMultipleAI(playerOne, playerTwo);
+                boolean gameEndAfterP1 = askOnceRunMultipleAI(playerOne, playerTwo);
+                if(!gameEndAfterP1){
+                    System.out.println("game ends after first AI changes board");
+                    break;
+                }
                 prettyPrint(board);
+                System.out.println(endgameCheck(board)[0]);
             }
     
             String gameEndOutcome = endgameCheck(board)[1];
@@ -141,6 +146,10 @@ public class Main {
                 }
             }
         }
+        if(move_ArrayList.size() == 0){
+            System.out.println("all positions are full");
+
+        }
         System.out.println(move_ArrayList);
         String moveToUse = "";
         String moveToBlock = "";
@@ -159,8 +168,6 @@ public class Main {
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
             // play as the player to find which pos to block
             String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopyAlt, move, false,playerChar));
-            System.out.println("Where com can win: "+ Arrays.toString(outcomeArray));
-            System.out.println("Where player can win: "+ Arrays.toString(outcomeArrayAlt));
             // if the computer is winning,
             if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
@@ -182,6 +189,7 @@ public class Main {
             moveToUse = moveToUseToGetTie;
         }
         if (moveToUse.length()==0){
+            System.out.println(move_ArrayList.size());
             moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
             System.out.println("random move is produced"); 
         }
@@ -218,7 +226,6 @@ public class Main {
             }
 
             String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
-            System.out.println("after using changeBoard, board changes something happens in above line");
             // if the computer is winning,
             if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
                 moveToUse = move;
@@ -252,7 +259,7 @@ public class Main {
         return board;
     }
     // get the number assigned to the ai and determine who that belongs to(using an array)
-    public void askOnceRunMultipleAI(int playerOne, int playerTwo){
+    public boolean askOnceRunMultipleAI(int playerOne, int playerTwo){
         // will only run per game
         // figure out the choice and subsequently p1 and p2
         switch (playerOne){
@@ -265,6 +272,10 @@ public class Main {
             case 3:
                 winAndBlockLose("X");
         }
+        // check after p1 plays whether the board is full
+        if (endgameCheck(board)[0] == "true"){
+            return false;
+        }
         switch (playerTwo){
             case 1:
                 random_ai("O"); 
@@ -276,7 +287,7 @@ public class Main {
                 winAndBlockLose("O");
                 break;
         }
-
+        return true;
     }
 
     // 4. change the board and print it
