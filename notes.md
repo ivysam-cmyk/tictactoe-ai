@@ -12,5 +12,3 @@ show winner
 possible choices
 12 21 13 31 23 32 
 -------------------------------------------
-find out the AI which wins
-when you get the char which wins set an if condition
