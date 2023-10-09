@@ -17,10 +17,13 @@ public class Main {
 
     // assume com always plays 1st
     public Main() {
+        boardCreator();
         while(endgameCheck(board)[0] == "false"){
             int maxScore = minimax(board, "X");
+            System.out.println("maxScore: "+ maxScore);
             String moveByCom = score_moveDict.get(maxScore);
             changeBoard(board, moveByCom, "X");
+            prettyPrint(board);
             // ask human
             askHuman();
         }
@@ -37,15 +40,20 @@ public class Main {
                     return 0;
             }
         }
+
         // get all the legal moves for the current player
-        String[] legalMoves = getLegalMoves(player, board);
+        ArrayList<String> legalMoves = getLegalMoves(player, board);
+        System.out.println("legalMoves: "+ legalMoves);
         ArrayList<Integer> scores = new ArrayList<>();
         for(String move : legalMoves){
+        System.out.println("move: "+ move);
             // change the board
             String[][] newBoard = changeBoard(board, move, player);
+            prettyPrint(newBoard);
             // need to know opponent as need to know whose turn next time minimax is called
             String opponent = getOpponent(player);
             int score = minimax(newBoard,opponent);
+            System.out.println("score gotten");
             scores.add(score);
             score_moveDict.put(score, move);
             // add to the score-move dictionary
@@ -56,7 +64,6 @@ public class Main {
             return Collections.min(scores);
         }
     }
-    public afterMinimax()
     public void askHuman() {
         String choicePos = "";
         boolean whetherInt = true;
@@ -77,20 +84,19 @@ public class Main {
         }while(whetherInt && choicePos.length()!=2);
         changeBoard(board, choicePos, "O");
     }
-    public String[] getLegalMoves(String playerChar, String[][] board) {
+    public ArrayList<String> getLegalMoves(String playerChar, String[][] board) {
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // if there is a blank, record it
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 if(board[i][j].equals(" ")){
                     // convert to String b4 concat
-                    String index = Integer.toString(i)+ Integer.toString(j);
+                    String index = ""+ i+ j;
                     move_ArrayList.add(index);
                 }
             }
         }
-        String[] legalMovesArray = new String[move_ArrayList.size()];
-        return legalMovesArray;
+        return move_ArrayList;
     }
 
     // 1. make a board
