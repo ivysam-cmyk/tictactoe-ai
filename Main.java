@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Main {
@@ -7,107 +8,69 @@ public class Main {
     boolean gameStart;
     int playerOne;
     int playerTwo;
-    static int random_aiWins = 0;
-    static int winOnlyWins = 0;
-    static int winAndBlockLoseWins = 0;
     public static String[][] board;
     public static String[] endgameArray = new String[2];
-    public static String[] AIArray = {"random_ai", "winOnly", "winAndBlockLose"};
-    public String playerOneChar = "X";
-    public String playerTwoChar = "O";
     // create one scanner and use as opening and closing new scanners spawns Exceptions
     public Scanner scann = new Scanner(System.in);
-    public Main() {
-        while(gameStart == true || playerOne == playerTwo){
-            String choice;
-            System.out.println("Here lies a list of AI to choose to face each other in a spirited battle of TTT");
-            System.out.println("1. random_ai");
-            System.out.println("2. choose winning spot ai");
-            System.out.println("3. choose winning spot and block losing spot ai");
-            System.out.println("Write the 2 numbers consecutively, the first digit is player 1 and second digit is player 2.");
-            System.out.println("--------------------------------");
-            choice = scann.nextLine();
-            gameStart = false;
-            playerOne = Integer.parseInt(choice.substring(0, 1)); 
-            playerTwo = Integer.parseInt(choice.substring(1)); 
-        }
 
-        System.out.println("Enter the number of times you wish to run the game");
-        int repeatNum = Integer.parseInt(scann.nextLine());
-        for(int i=0 ; i<repeatNum; i++){
-            boardCreator();
-            gameStart = true;
-            // keep making moves until the game ends
-            while((endgameCheck(board))[0] == "false"){
-                boolean gameEndAfterP1 = askOnceRunMultipleAI(playerOne, playerTwo);
-                if(!gameEndAfterP1){
-                    System.out.println("game ends after first AI changes board");
-                    break;
-                }
-                prettyPrint(board);
-                System.out.println(endgameCheck(board)[0]);
-            }
-    
-            String gameEndOutcome = endgameCheck(board)[1];
-            // if X wins, increment the playerOne AI
-            if(gameEndOutcome == "X"){
-                String winner = AIArray[playerOne-1];
-                switch(playerOne){
-                    case 1:
-                        random_aiWins++;
-                        break;
-                    case 2:
-                        winOnlyWins++;
-                        break;
-                    case 3:
-                        winAndBlockLoseWins++;
-                }
-            }else if (gameEndOutcome == "O"){
-                String winner = AIArray[playerTwo-1];
-                switch(playerTwo){
-                    case 1:
-                        random_aiWins++;
-                        break;
-                    case 2:
-                        winOnlyWins++;
-                        break;
-                    case 3:
-                        winAndBlockLoseWins++;
-                }
-            }
-            System.out.println("wins by random_ai: "+ random_aiWins);
-            System.out.println("wins by winsOnly AI: "+ winOnlyWins);
-            System.out.println("wins by winAndBlockLose AI: "+ winAndBlockLoseWins);
-        }
-        switch (playerOne){
-            case(1):
-                float random_aiWinsPercentage = ( (float) random_aiWins/repeatNum)*100;
-                System.out.println("Percentage of wins by random AI: "+ random_aiWinsPercentage);
-                break;
-            case(2):
-                float winOnlyWinsPercentage = ( (float) winOnlyWins/repeatNum)*100;
-                System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
-                break;
-            case(3):
-                float winAndBlockLoseWinsPercentage = ( (float) winAndBlockLoseWins/repeatNum)*100;
-                System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
-        }
-        switch (playerTwo){
-            case(1):
-                float random_aiWinsPercentage = ( (float) random_aiWins/repeatNum)*100;
-                System.out.println("Percentage of wins by random AI: "+ random_aiWinsPercentage);
-                break;
-            case(2):
-                float winOnlyWinsPercentage = ( (float) winOnlyWins/repeatNum)*100;
-                System.out.println("Percentage of wins by winsOnly AI: "+ winOnlyWinsPercentage);
-                break;
-            case(3):
-                float winAndBlockLoseWinsPercentage = ( (float) winAndBlockLoseWins/repeatNum)*100;
-                System.out.println("Percentage of wins by WinAndBlockLose AI: "+ winAndBlockLoseWinsPercentage);
+    // assume com always plays 1st
+    public Main() {
+        while(endgameCheck(board)[0] == "false"){
+            minimax(board, "X");
+            // ask human
+            askHuman();
         }
     }
-    
-    public void random_ai(String comChar) {
+    public int minimax(String[][] board, String player){
+        if(endgameCheck(board)[0] == "true"){
+            // recursion exit case
+            switch (endgameCheck(board)[1]){
+                case "X":
+                    return 10;
+                case "O":
+                    return -10;
+                case "tie":
+                    return 0;
+            }
+        }
+        // get all the legal moves for the current player
+        String[] legalMoves = getLegalMoves(player, board);
+        ArrayList<Integer> scores = new ArrayList<>();
+        for(String move : legalMoves){
+            // change the board
+            String[][] newBoard = changeBoard(board, move, player);
+            // need to know opponent as need to know whose turn next time minimax is called
+            String opponent = getOpponent(player);
+            int score = minimax(newBoard,opponent);
+            scores.add(score);
+        }
+        if (player == "X"){
+            return Collections.max(scores);
+        } else {
+            return Collections.min(scores);
+        }
+    }
+    public void askHuman() {
+        String choicePos = "";
+        boolean whetherInt = true;
+        do{
+            System.out.println("You can choose one of the blank spaces, choose the row and column.");
+            System.out.println("Example if you want to choose the middle spot, write 11.");
+            choicePos = scann.nextLine();
+            System.out.println("Your move is: " + choicePos);
+            // keep asking until player inputs right format(is a number and 2 digits)
+            try{
+                int testInt = Integer.parseInt(choicePos);
+            // to catch the exception if it is not a num
+            } catch (Exception e){
+                System.out.println("Enter a number of length 2!");
+                whetherInt = false;
+            }
+        // keep asking until it is a number and length 2
+        }while(whetherInt && choicePos.length()!=2);
+        changeBoard(board, choicePos, "O");
+    }
+    public String[] getLegalMoves(String playerChar, String[][] board) {
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // if there is a blank, record it
         for (int i = 0; i < board.length; i++) {
@@ -119,135 +82,10 @@ public class Main {
                 }
             }
         }
-        String position = move_ArrayList.get((int)(Math.random() * move_ArrayList.size()));
-        changeBoard(board, position, true, comChar);
+        String[] legalMovesArray = new String[move_ArrayList.size()];
+        return legalMovesArray;
     }
 
-    public void winAndBlockLose(String comChar) {
-            // figure out the chars for both AIs
-            String playerChar = "";
-            switch (comChar){
-                case "X":
-                    playerChar = "O";
-                    break;
-                case "O":
-                    playerChar = "X";
-                    break;
-            }
-        ArrayList<String> move_ArrayList = new ArrayList<>();
-        // first get all the possible moves and then for everyone of them
-        // check if endgame produces false for player/ true for com and use that move
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if(board[i][j].equals(" ")){
-                    // can't concat int, so make it string first
-                    String index = Integer.toString(i)+ Integer.toString(j);
-                    move_ArrayList.add(index);
-                }
-            }
-        }
-        if(move_ArrayList.size() == 0){
-            System.out.println("all positions are full");
-
-        }
-        System.out.println(move_ArrayList);
-        String moveToUse = "";
-        String moveToBlock = "";
-        String moveToUseToGetTie = "";
-        for (String move : move_ArrayList){
-            // create a copy of the board, everytime you want to see what a move does to a board
-            String[][] boardCopy = new String[3][3];
-            String[][] boardCopyAlt = new String[3][3];
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                   boardCopy[i][j] = board[i][j];
-                   boardCopyAlt[i][j] = board[i][j];
-                }
-            }
-
-            String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
-            // play as the player to find which pos to block
-            String[] outcomeArrayAlt = endgameCheck(changeBoard(boardCopyAlt, move, false,playerChar));
-            // if the computer is winning,
-            if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
-                moveToUse = move;
-            } else if (outcomeArray[1].equals("tie")){
-                moveToUseToGetTie = move; 
-            }
-            // if the computer is losing,
-            if(outcomeArrayAlt[0].equals("true") && outcomeArrayAlt[1].equals(playerChar)){
-                moveToBlock = move;
-            }
-        }
-        // order : win,block loss, random(tie), random
-        // if no winning move was found, use any move that blocks losing
-        if(moveToUse.length()==0){
-            moveToUse = moveToBlock;
-        } 
-        if(moveToUse.length()==0){
-            // use the move that results in tie
-            moveToUse = moveToUseToGetTie;
-        }
-        if (moveToUse.length()==0){
-            System.out.println(move_ArrayList.size());
-            moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
-            System.out.println("random move is produced"); 
-        }
-        
-        System.out.println("the move to use is...");
-        System.out.println(moveToUse);
-        changeBoard(board, moveToUse, true, comChar);
-        
-    }
-    
-    public void winOnly(String comChar) {
-        ArrayList<String> move_ArrayList = new ArrayList<>();
-        // first get all the possible moves and then for everyone of them
-        // check if endgame produces false for player/ true for com and use that move
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if(board[i][j].equals(" ")){
-                    // can't concat int, so make it string first
-                    String index = Integer.toString(i)+ Integer.toString(j);
-                    move_ArrayList.add(index);
-                }
-            }
-        }
-        System.out.println(move_ArrayList);
-        String moveToUse = "";
-        String moveToUseToGetTie = "";
-        for (String move : move_ArrayList){
-            // create a copy of the board, everytime you want to see what a move does to a board
-            String[][] boardCopy = new String[3][3];
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                   boardCopy[i][j] = board[i][j];
-                }
-            }
-
-            String[] outcomeArray = endgameCheck(changeBoard(boardCopy, move, true, comChar));
-            // if the computer is winning,
-            if(outcomeArray[0].equals("true") && outcomeArray[1].equals(comChar)){
-                moveToUse = move;
-            } else if (outcomeArray[1].equals("tie")){
-                moveToUseToGetTie = move; 
-            }
-        }
-        System.out.println("done going through all the legal moves");
-        // if no winning move was found, use any random
-        if(moveToUse.length() == 0 && moveToUseToGetTie.length() != 0){
-            // use the move that results in tie
-            moveToUse = moveToUseToGetTie;
-        } else if (moveToUse.length() == 0 && moveToUseToGetTie.length() ==0){
-            System.out.println(move_ArrayList.size());
-           moveToUse = move_ArrayList.get((int)(Math.random() * move_ArrayList.size())); 
-        }
-        
-        System.out.println("the move to use is...");
-        System.out.println(moveToUse);
-        changeBoard(board, moveToUse, true, comChar);
-        
-    }
     // 1. make a board
     public String[][] boardCreator(){
         board = new String[3][3];
@@ -258,64 +96,29 @@ public class Main {
         } 
         return board;
     }
-    // get the number assigned to the ai and determine who that belongs to(using an array)
-    public boolean askOnceRunMultipleAI(int playerOne, int playerTwo){
-        // will only run per game
-        // figure out the choice and subsequently p1 and p2
-        switch (playerOne){
-            case 1:
-                random_ai("X"); 
-                break;
-            case 2:
-                winOnly("X");
-                break;
-            case 3:
-                winAndBlockLose("X");
+    public String getOpponent(String player){
+        if (player == "X"){
+            return "O";
+        } else {
+            return "X";
         }
-        // check after p1 plays whether the board is full
-        if (endgameCheck(board)[0] == "true"){
-            return false;
-        }
-        switch (playerTwo){
-            case 1:
-                random_ai("O"); 
-                break;
-            case 2:
-                winOnly("O");
-                break;
-            case 3:
-                winAndBlockLose("O");
-                break;
-        }
-        return true;
     }
 
     // 4. change the board and print it
-    public String[][] changeBoard(String[][] boardToBeChanged, String position, boolean compTurn, String comChar){
+    public String[][] changeBoard(String[][] boardToBeChanged, String position, String player){
         int rowPosition = Integer.parseInt(position.substring(0, 1));
         int colPosition = Integer.parseInt(position.substring(1));
 
         if(boardToBeChanged[rowPosition][colPosition].equals(" ")){
-            if(compTurn){
-                System.out.println("pos is blank and compTurn");
-                boardToBeChanged[rowPosition][colPosition] = comChar;
-                return boardToBeChanged;
-            }
-            String playerChar = "";
-            switch (comChar){
-                case "X":
-                    playerChar = "O";
-                    break;
-                case "O":
-                    playerChar = "X";
-                    break;
-            }
-            boardToBeChanged[rowPosition][colPosition] = playerChar;
+            boardToBeChanged[rowPosition][colPosition] = player;
             return boardToBeChanged;
         } else {
             System.out.println("The position at "+ position+ " is...");
             System.out.println(boardToBeChanged[rowPosition][colPosition]);
             System.out.println("Position "+ position +" already filled, try again!");
+            if(player == "O"){
+                askHuman();
+            }
         }
         
         return new String[0][0];
