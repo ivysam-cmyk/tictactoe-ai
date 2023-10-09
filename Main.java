@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Scanner;
 
 public class Main {
     // gameStart is to make sure that person is only asked which AI once
     boolean gameStart;
+    Hashtable<Integer, String> score_moveDict = new Hashtable<>();
     int playerOne;
     int playerTwo;
     public static String[][] board;
@@ -16,7 +18,9 @@ public class Main {
     // assume com always plays 1st
     public Main() {
         while(endgameCheck(board)[0] == "false"){
-            minimax(board, "X");
+            int maxScore = minimax(board, "X");
+            String moveByCom = score_moveDict.get(maxScore);
+            changeBoard(board, moveByCom, "X");
             // ask human
             askHuman();
         }
@@ -43,6 +47,8 @@ public class Main {
             String opponent = getOpponent(player);
             int score = minimax(newBoard,opponent);
             scores.add(score);
+            score_moveDict.put(score, move);
+            // add to the score-move dictionary
         }
         if (player == "X"){
             return Collections.max(scores);
@@ -50,6 +56,7 @@ public class Main {
             return Collections.min(scores);
         }
     }
+    public afterMinimax()
     public void askHuman() {
         String choicePos = "";
         boolean whetherInt = true;
