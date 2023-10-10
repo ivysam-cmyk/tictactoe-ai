@@ -23,6 +23,7 @@ public class Main {
             System.out.println("maxScore: "+ maxScore);
             String moveByCom = score_moveDict.get(maxScore);
             changeBoard(board, moveByCom, "X");
+            score_moveDict.clear();
             prettyPrint(board);
             // ask human
             askHuman();
@@ -46,7 +47,7 @@ public class Main {
         System.out.println("legalMoves: "+ legalMoves);
         ArrayList<Integer> scores = new ArrayList<>();
         for(String move : legalMoves){
-        System.out.println("move: "+ move);
+            System.out.println("move: "+ move);
             // change the board
             String[][] newBoard = changeBoard(board, move, player);
             prettyPrint(newBoard);
@@ -55,8 +56,8 @@ public class Main {
             int score = minimax(newBoard,opponent);
             System.out.println("score gotten");
             scores.add(score);
+            // hashtable is a global var
             score_moveDict.put(score, move);
-            // add to the score-move dictionary
         }
         if (player == "X"){
             return Collections.max(scores);
