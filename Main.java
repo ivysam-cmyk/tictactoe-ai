@@ -31,6 +31,7 @@ public class Main {
     }
     public int minimax(String[][] board, String player){
         if(endgameCheck(board)[0] == "true"){
+            System.out.println("endgame reached...");
             // recursion exit case
             switch (endgameCheck(board)[1]){
                 case "X":
@@ -54,7 +55,6 @@ public class Main {
             // need to know opponent as need to know whose turn next time minimax is called
             String opponent = getOpponent(player);
             int score = minimax(newBoard,opponent);
-            System.out.println("score gotten");
             scores.add(score);
             // hashtable is a global var
             score_moveDict.put(score, move);
