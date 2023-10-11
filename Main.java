@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Main {
     // gameStart is to make sure that person is only asked which AI once
     boolean gameStart;
-    Hashtable<Integer, String> score_moveDict = new Hashtable<>();
     int playerOne;
     int playerTwo;
     public static String[][] board;
@@ -19,11 +18,8 @@ public class Main {
     public Main() {
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
-            int maxScore = minimax(board, "X");
-            System.out.println("maxScore: "+ maxScore);
-            String moveByCom = score_moveDict.get(maxScore);
+            String moveByCom = minimaxMove(board, "X");
             changeBoard(board, moveByCom, "X");
-            score_moveDict.clear();
             prettyPrint(board);
             // ask human
             askHuman();
@@ -57,13 +53,33 @@ public class Main {
             int score = minimax(newBoard,opponent);
             scores.add(score);
             // hashtable is a global var
-            score_moveDict.put(score, move);
         }
+        System.out.println("scores arraylist: "+scores);
         if (player == "X"){
             return Collections.max(scores);
         } else {
             return Collections.min(scores);
         }
+    }
+    public String minimaxMove(String[][] board, String player){
+        String bestMove = "";
+        int bestScore = -2; //-2 is random starter value
+
+        //for every legal move of player X, check the score that player O can get in response
+        // only use the maximum score as X wants to maximise score
+        ArrayList<String> legalMoves = getLegalMoves(player, board);
+        for (String move: legalMoves){
+            String[][] newBoard = changeBoard(board, move, player);
+            String opp = getOpponent(player);
+            int score = minimax(newBoard, player);
+
+            if(score>bestScore || bestScore == -2){
+               bestMove = move;
+               bestScore = score; 
+            }
+        }
+        return bestMove;
+
     }
     public void askHuman() {
         String choicePos = "";
