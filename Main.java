@@ -19,7 +19,11 @@ public class Main {
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
-            changeBoard(board, moveByCom, "X");
+            board = changeBoard(board, moveByCom, "X");
+            if (endgameCheck(board)[0] == "false"){
+                System.out.println("game over!");
+                break;  
+            }
             prettyPrint(board);
             // ask human
             askHuman();
