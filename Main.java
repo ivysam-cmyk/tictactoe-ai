@@ -19,10 +19,11 @@ public class Main {
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
+            System.out.println("The moveByCom: " + moveByCom);
             board = changeBoard(board, moveByCom, "X");
             if (endgameCheck(board)[0] == "false"){
                 System.out.println("game over!");
-                break;  
+                break;
             }
             prettyPrint(board);
             // ask human
@@ -48,7 +49,12 @@ public class Main {
         System.out.println("legalMoves: "+ legalMoves);
         ArrayList<Integer> scores = new ArrayList<>();
         for(String move : legalMoves){
-            System.out.println("move: "+ move);
+            // if the game has ended, dont do another move
+            if (endgameCheck(board)[0] == "true") {
+                System.out.println("stopped from moving due to endgame");
+                break;
+            }
+            System.out.println("making another move: "+ move);
             // change the board
             String[][] newBoard = changeBoard(board, move, player);
             prettyPrint(newBoard);
@@ -70,24 +76,28 @@ public class Main {
         int bestScore = -2; //-2 is random starter value
 
         //for every legal move of player X, check the score that player O can get in response
-        // only use the maximum score as X wants to maximise score
         ArrayList<String> legalMoves = getLegalMoves(player, board);
         for (String move: legalMoves){
             String[][] newBoard = changeBoard(board, move, player);
             String opp = getOpponent(player);
-            int score = minimax(newBoard, player);
-
+            int score = minimax(newBoard, opp);
+            System.out.println("possible best score: "+ score);
+            // only use the maximum score as X wants to maximise score
             if(score>bestScore || bestScore == -2){
-               bestMove = move;
-               bestScore = score; 
+                bestMove = move;
+                System.out.println("bestMove: "+bestMove);
+                bestScore = score; 
             }
         }
+        System.out.println("bestMove: "+bestMove);
         return bestMove;
 
     }
     public void askHuman() {
         String choicePos = "";
         boolean whetherInt = true;
+        int rowPosition = 0;
+        int colPosition = 0;
         do{
             System.out.println("You can choose one of the blank spaces, choose the row and column.");
             System.out.println("Example if you want to choose the middle spot, write 11.");
@@ -95,14 +105,18 @@ public class Main {
             System.out.println("Your move is: " + choicePos);
             // keep asking until player inputs right format(is a number and 2 digits)
             try{
-                int testInt = Integer.parseInt(choicePos);
+                rowPosition = Integer.parseInt(choicePos.substring(0, 1));
+                colPosition = Integer.parseInt(choicePos.substring(1));
+                System.out.println("rowPosition "+rowPosition);
+                System.out.println("colPosition "+colPosition);
+                
             // to catch the exception if it is not a num
             } catch (Exception e){
                 System.out.println("Enter a number of length 2!");
                 whetherInt = false;
             }
-        // keep asking until it is a number and length 2
-        }while(whetherInt && choicePos.length()!=2);
+        // keep asking until it is a number and length 2 and within range
+        }while(whetherInt && choicePos.length()!=2 && ((colPosition < 3 && rowPosition < 3) && (colPosition >=0 && rowPosition >=0)));
         changeBoard(board, choicePos, "O");
     }
     public ArrayList<String> getLegalMoves(String playerChar, String[][] board) {
@@ -151,6 +165,7 @@ public class Main {
             System.out.println(boardToBeChanged[rowPosition][colPosition]);
             System.out.println("Position "+ position +" already filled, try again!");
             if(player == "O"){
+                System.out.println("asking human...");
                 askHuman();
             }
         }
