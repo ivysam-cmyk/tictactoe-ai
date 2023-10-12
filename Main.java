@@ -78,18 +78,20 @@ public class Main {
         //for every legal move of player X, check the score that player O can get in response
         ArrayList<String> legalMoves = getLegalMoves(player, board);
         for (String move: legalMoves){
+            if( endgameCheck(board)[0] == "true"){
+                break;
+            }
             String[][] newBoard = changeBoard(board, move, player);
             String opp = getOpponent(player);
             int score = minimax(newBoard, opp);
-            System.out.println("possible best score: "+ score);
             // only use the maximum score as X wants to maximise score
             if(score>bestScore || bestScore == -2){
                 bestMove = move;
-                System.out.println("bestMove: "+bestMove);
                 bestScore = score; 
             }
         }
         System.out.println("bestMove: "+bestMove);
+        prettyPrint(board);
         return bestMove;
 
     }
