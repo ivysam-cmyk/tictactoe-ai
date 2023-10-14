@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Scanner;
 
 public class Main {
@@ -23,16 +22,20 @@ public class Main {
             String[][] newBoard = deepCopy(board);
 
             board = changeBoard(newBoard, moveByCom, "X");
+            prettyPrint(board);
             if (endgameCheck(board)[0] == "true"){
                 System.out.println("game over!");
                 break;
             }
-            prettyPrint(board);
             // ask human
             askHuman();
         }
     }
     public int minimax(String[][] board, String player){
+        /* the function checks every possible move and applies it in all the permutations
+         It finds the score for each of the permutations and adds it to a scores list
+         this scores list refreshes whenever a new positon is called
+         then, depending on who called it, it returns min/max score. */
         if(endgameCheck(board)[0] == "true"){
             System.out.println("endgame reached...");
             // recursion exit case
@@ -45,7 +48,6 @@ public class Main {
                     return 0;
             }
         }
-
         // get all the legal moves for the current player
         ArrayList<String> legalMoves = getLegalMoves(player, board);
         System.out.println("legalMoves: "+ legalMoves);
@@ -76,6 +78,8 @@ public class Main {
     }
 
     public String minimaxMove(String[][] board, String player){
+        /* for current state of the board, it checks every legal move and then
+        finds score of each move. Overall, it will return a move with highest score from the legal moves*/
         String bestMove = "";
         int bestScore = -2; //-2 is random starter value
 
@@ -100,6 +104,7 @@ public class Main {
         return bestMove;
 
     }
+
     public void askHuman() {
         String choicePos = "";
         boolean whetherInt = true;
@@ -126,6 +131,7 @@ public class Main {
         }while(whetherInt && choicePos.length()!=2 && ((colPosition < 3 && rowPosition < 3) && (colPosition >=0 && rowPosition >=0)));
         changeBoard(board, choicePos, "O");
     }
+
     public ArrayList<String> getLegalMoves(String playerChar, String[][] board) {
         ArrayList<String> move_ArrayList = new ArrayList<>();
         // if there is a blank, record it
@@ -151,6 +157,7 @@ public class Main {
         } 
         return board;
     }
+
     public String getOpponent(String player){
         if (player == "X"){
             return "O";
@@ -208,6 +215,7 @@ public class Main {
         System.out.println(seperator);
         
     }
+
     public String[] endgameCheck(String[][] board) {
         // first check if any one wins, 
         // then check if not all spaces are filled, then game hasn't ended
