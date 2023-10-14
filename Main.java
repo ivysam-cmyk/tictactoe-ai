@@ -20,8 +20,10 @@ public class Main {
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
             System.out.println("The moveByCom: " + moveByCom);
-            board = changeBoard(board, moveByCom, "X");
-            if (endgameCheck(board)[0] == "false"){
+            String[][] newBoard = deepCopy(board);
+
+            board = changeBoard(newBoard, moveByCom, "X");
+            if (endgameCheck(board)[0] == "true"){
                 System.out.println("game over!");
                 break;
             }
@@ -56,7 +58,8 @@ public class Main {
             }
             System.out.println("making another move: "+ move);
             // change the board
-            String[][] newBoard = changeBoard(board, move, player);
+            String[][] newBoard = deepCopy(board);
+            newBoard = changeBoard(newBoard, move, player);
             prettyPrint(newBoard);
             // need to know opponent as need to know whose turn next time minimax is called
             String opponent = getOpponent(player);
@@ -71,6 +74,7 @@ public class Main {
             return Collections.min(scores);
         }
     }
+
     public String minimaxMove(String[][] board, String player){
         String bestMove = "";
         int bestScore = -2; //-2 is random starter value
@@ -81,7 +85,8 @@ public class Main {
             if( endgameCheck(board)[0] == "true"){
                 break;
             }
-            String[][] newBoard = changeBoard(board, move, player);
+            String[][] newBoard = deepCopy(board);
+            newBoard = changeBoard(newBoard, move, player);
             String opp = getOpponent(player);
             int score = minimax(newBoard, opp);
             // only use the maximum score as X wants to maximise score
@@ -173,6 +178,17 @@ public class Main {
         }
         
         return new String[0][0];
+    }
+
+    public String[][] deepCopy(String[][] original) {
+        if (original == null) {
+            return null;
+        }
+        final String[][] result = new String[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            result[i] = Arrays.copyOf(original[i], original[i].length);
+        }
+        return result;
     }
 
     public void prettyPrint(String[][] board){
