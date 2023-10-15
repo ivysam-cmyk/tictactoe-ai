@@ -47,12 +47,15 @@ public class Main implements  ActionListener{
         titlePanel.add(textField);
         frame.add(titlePanel, BorderLayout.NORTH);
         frame.add(buttonPanel);
-        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } 
 
 
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
-            textField.setText("X's turn");
             String moveByCom = minimaxMove(board, "X");
             System.out.println("The moveByCom: " + moveByCom);
             String[][] newBoard = deepCopy(board);
@@ -64,7 +67,6 @@ public class Main implements  ActionListener{
                 break;
             }
             // ask human
-            textField.setText("O's turn");
             askHuman();
         }
     }
@@ -120,6 +122,7 @@ public class Main implements  ActionListener{
     }
 
     public String minimaxMove(String[][] board, String player){
+        textField.setText("X's turn");
         /* for current state of the board, it checks every legal move and then
         finds score of each move. Overall, it will return a move with highest score from the legal moves*/
         String bestMove = "";
@@ -148,6 +151,7 @@ public class Main implements  ActionListener{
     }
 
     public void askHuman() {
+        textField.setText("O's turn");
         String choicePos = "";
         boolean whetherInt = true;
         int rowPosition = 0;
