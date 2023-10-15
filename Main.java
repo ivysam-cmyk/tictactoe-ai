@@ -1,13 +1,15 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Scanner;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
 
-public class Main {
-    // gameStart is to make sure that person is only asked which AI once
-    boolean gameStart;
-    int playerOne;
-    int playerTwo;
+public class Main implements  ActionListener{
+    JFrame frame = new JFrame();
+    JPanel titlePanel = new JPanel();
+    JPanel buttonPanel = new JPanel();
+    JLabel textField = new JLabel();
+    JButton[] buttons = new JButton[9];
+    // only allow user to press button during askHuman()
     public static String[][] board;
     public static String[] endgameArray = new String[2];
     // create one scanner and use as opening and closing new scanners spawns Exceptions
@@ -15,6 +17,22 @@ public class Main {
 
     // assume com always plays 1st
     public Main() {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800,800);
+        frame.getContentPane().setBackground(new Color(50, 50, 50));
+        frame.setLayout(new BorderLayout());
+        frame.setVisible(true);
+
+        textField.setBackground(new Color(25, 25 ,25));
+        textField.setForeground(new Color(25, 255 ,0));
+        textField.setFont(new Font("Ink Free", Font.BOLD,75));
+        textField.setHorizontalAlignment(JLabel.CENTER);
+        textField.setText("Tic Tac Toe");
+        textField.setOpaque(true);
+        
+        titlePanel.setLayout(new BorderLayout());
+        //title in top left corner. (x coord, y coord, length ,height)
+        titlePanel.setBounds(0,0,800,100);
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
