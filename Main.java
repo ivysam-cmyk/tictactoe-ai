@@ -16,13 +16,13 @@ public class Main implements  ActionListener{
     public Scanner scann = new Scanner(System.in);
 
     // assume com always plays 1st
-    public Main() {
+    Main() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800,800);
         frame.getContentPane().setBackground(new Color(50, 50, 50));
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
-
+        
         textField.setBackground(new Color(25, 25 ,25));
         textField.setForeground(new Color(25, 255 ,0));
         textField.setFont(new Font("Ink Free", Font.BOLD,75));
@@ -33,12 +33,15 @@ public class Main implements  ActionListener{
         titlePanel.setLayout(new BorderLayout());
         //title in top left corner. (x coord, y coord, length ,height)
         titlePanel.setBounds(0,0,800,100);
+        titlePanel.add(textField);
+        frame.add(titlePanel);
+        
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
             System.out.println("The moveByCom: " + moveByCom);
             String[][] newBoard = deepCopy(board);
-
+            
             board = changeBoard(newBoard, moveByCom, "X");
             prettyPrint(board);
             if (endgameCheck(board)[0] == "true"){
@@ -48,6 +51,11 @@ public class Main implements  ActionListener{
             // ask human
             askHuman();
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e){
+
     }
     public int minimax(String[][] board, String player){
         /* the function checks every possible move and applies it in all the permutations
