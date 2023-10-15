@@ -7,7 +7,7 @@ public class Main implements  ActionListener{
     JFrame frame = new JFrame();
     JPanel titlePanel = new JPanel();
     JPanel buttonPanel = new JPanel();
-    JLabel textField = new JLabel();
+    JLabel textField = new JLabel();//for titlePanel
     JButton[] buttons = new JButton[9];
     // only allow user to press button during askHuman()
     public static String[][] board;
@@ -33,9 +33,15 @@ public class Main implements  ActionListener{
         titlePanel.setLayout(new BorderLayout());
         //title in top left corner. (x coord, y coord, length ,height)
         titlePanel.setBounds(0,0,800,100);
+        buttonPanel.setLayout(new GridLayout(3, 3));
+        buttonPanel.setBackground(new Color(150, 150 ,150));        
+
         titlePanel.add(textField);
-        frame.add(titlePanel);
+        frame.add(titlePanel, BorderLayout.NORTH);
+        frame.add(buttonPanel);
         
+
+
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
