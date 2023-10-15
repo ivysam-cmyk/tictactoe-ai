@@ -56,20 +56,27 @@ public class Main implements  ActionListener{
 
 
         boardCreator();
+        player1Turn = true;
         while(endgameCheck(board)[0] == "false"){
-            String moveByCom = minimaxMove(board, "X");
-            minimaxMoveToBoard(moveByCom);
-            System.out.println("The moveByCom: " + moveByCom);
-            String[][] newBoard = deepCopy(board);
+            String moveByCom = "";
+            System.out.println("player1Turn: "+ player1Turn);    
+            if(player1Turn){
+                moveByCom = minimaxMove(board, "X");
+                minimaxMoveToBoard(moveByCom);
+                System.out.println("The moveByCom: " + moveByCom);
+                String[][] newBoard = deepCopy(board);
+                board = changeBoard(newBoard, moveByCom, "X");
+            }
             
-            board = changeBoard(newBoard, moveByCom, "X");
             prettyPrint(board);
             if (endgameCheck(board)[0] == "true"){
                 System.out.println("game over!");
                 break;
             }
+            player1Turn = false;
+            textField.setText("O's turn");
             // ask human
-            askHuman();
+
         }
     }
 
@@ -87,8 +94,9 @@ public class Main implements  ActionListener{
                         askHuman(convertedIndex);
                         buttons[i].setForeground(new Color(0,0,255));
                         buttons[i].setText("O");
-                        player1Turn = true;
+                        System.out.println("action is turning player1turn: "+ player1Turn);
                         textField.setText("X's turn");
+                        player1Turn = true;
                     }
 
                 }
@@ -149,7 +157,6 @@ public class Main implements  ActionListener{
     }
 
     public String minimaxMove(String[][] board, String player){
-        player1Turn = true;
         textField.setText("X's turn");
         /* for current state of the board, it checks every legal move and then
         finds score of each move. Overall, it will return a move with highest score from the legal moves*/
@@ -180,8 +187,6 @@ public class Main implements  ActionListener{
 
     public void askHuman(String choicePos) {
         //this will happen if changeBoard doesnt work
-        textField.setText("O's turn");
-        player1Turn = false;
         System.out.println("Your move is: " + choicePos);
         // keep asking until player inputs right format(is a number and 2 digits)
         changeBoard(board, choicePos, "O");
