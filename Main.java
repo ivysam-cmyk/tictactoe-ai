@@ -58,11 +58,7 @@ public class Main implements  ActionListener{
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
-            String rowString = moveByCom.substring(0, 1);
-            String colString = moveByCom.substring(1);
-            int buttonIndex = (Integer.parseInt(rowString)*3) + (Integer.parseInt(colString));
-            buttons[buttonIndex].setForeground(new Color(255,0,0));
-            buttons[buttonIndex].setText("X");
+            minimaxMoveToBoard(moveByCom);
             System.out.println("The moveByCom: " + moveByCom);
             String[][] newBoard = deepCopy(board);
             
@@ -82,16 +78,13 @@ public class Main implements  ActionListener{
         //goes through each button
         for (int i = 0; i < 9; i++) {
             if(e.getSource()== buttons[i]){
-                if(player1Turn){
+                if(!player1Turn) {
                     if(buttons[i].getText() == ""){
-                        buttons[i].setForeground(new Color(255,0,0));
-                        buttons[i].setText("X");
-                        player1Turn = false;
-                        textField.setText("O's turn");
-                    }
-                }
-                else {
-                    if(buttons[i].getText() == ""){
+                        int firstDigit = i/3;
+                        int secondDigit = i%3;
+                        //making it string for further checks
+                        String convertedIndex = "" + firstDigit + secondDigit;
+                        askHuman(convertedIndex);
                         buttons[i].setForeground(new Color(0,0,255));
                         buttons[i].setText("O");
                         player1Turn = true;
@@ -147,6 +140,13 @@ public class Main implements  ActionListener{
             return Collections.min(scores);
         }
     }
+    public void minimaxMoveToBoard(String move){
+        String rowString = move.substring(0, 1);
+        String colString = move.substring(1);
+        int buttonIndex = (Integer.parseInt(rowString)*3) + (Integer.parseInt(colString));
+        buttons[buttonIndex].setForeground(new Color(255,0,0));
+        buttons[buttonIndex].setText("X");
+    }
 
     public String minimaxMove(String[][] board, String player){
         player1Turn = true;
@@ -178,32 +178,12 @@ public class Main implements  ActionListener{
 
     }
 
-    public void askHuman() {
+    public void askHuman(String choicePos) {
+        //this will happen if changeBoard doesnt work
         textField.setText("O's turn");
         player1Turn = false;
-        String choicePos = "";
-        boolean whetherInt = true;
-        int rowPosition = 0;
-        int colPosition = 0;
-        do{
-            System.out.println("You can choose one of the blank spaces, choose the row and column.");
-            System.out.println("Example if you want to choose the middle spot, write 11.");
-            choicePos = scann.nextLine();
-            System.out.println("Your move is: " + choicePos);
-            // keep asking until player inputs right format(is a number and 2 digits)
-            try{
-                rowPosition = Integer.parseInt(choicePos.substring(0, 1));
-                colPosition = Integer.parseInt(choicePos.substring(1));
-                System.out.println("rowPosition "+rowPosition);
-                System.out.println("colPosition "+colPosition);
-                
-            // to catch the exception if it is not a num
-            } catch (Exception e){
-                System.out.println("Enter a number of length 2!");
-                whetherInt = false;
-            }
-        // keep asking until it is a number and length 2 and within range
-        }while(whetherInt && choicePos.length()!=2 && ((colPosition < 3 && rowPosition < 3) && (colPosition >=0 && rowPosition >=0)));
+        System.out.println("Your move is: " + choicePos);
+        // keep asking until player inputs right format(is a number and 2 digits)
         changeBoard(board, choicePos, "O");
     }
 
@@ -253,10 +233,6 @@ public class Main implements  ActionListener{
             System.out.println("The position at "+ position+ " is...");
             System.out.println(boardToBeChanged[rowPosition][colPosition]);
             System.out.println("Position "+ position +" already filled, try again!");
-            if(player == "O"){
-                System.out.println("asking human...");
-                askHuman();
-            }
         }
         
         return new String[0][0];
