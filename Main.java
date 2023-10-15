@@ -71,12 +71,19 @@ public class Main implements  ActionListener{
             prettyPrint(board);
             if (endgameCheck(board)[0] == "true"){
                 System.out.println("game over!");
+                String winnerOrTie = endgameCheck(board)[1];
                 break;
             }
             player1Turn = false;
             textField.setText("O's turn");
             // ask human
+        }
+        String winnerOrTie = endgameCheck(board)[1];
+        if(winnerOrTie== "tie"){
+            textField.setText(winnerOrTie);
 
+        } else{
+            textField.setText(winnerOrTie + " wins!");
         }
     }
 
@@ -188,6 +195,7 @@ public class Main implements  ActionListener{
     public void askHuman(String choicePos) {
         //this will happen if changeBoard doesnt work
         System.out.println("Your move is: " + choicePos);
+        player1Turn = true;
         // keep asking until player inputs right format(is a number and 2 digits)
         changeBoard(board, choicePos, "O");
     }
