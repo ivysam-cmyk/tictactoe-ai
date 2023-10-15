@@ -36,6 +36,14 @@ public class Main implements  ActionListener{
         buttonPanel.setLayout(new GridLayout(3, 3));
         buttonPanel.setBackground(new Color(150, 150 ,150));        
 
+        for (int i = 0; i < 9; i++) {
+            //array is used to keep track of who wins/tie?
+            buttons[i] = new JButton();  
+            buttonPanel.add(buttons[i]);
+            buttons[i].setFont(new Font("MV Boli", Font.BOLD, 120));//last num is font size
+            buttons[i].setFocusable(false);
+            buttons[i].addActionListener(this);
+        }
         titlePanel.add(textField);
         frame.add(titlePanel, BorderLayout.NORTH);
         frame.add(buttonPanel);
