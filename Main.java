@@ -4,6 +4,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class Main implements  ActionListener{
+    boolean player1Turn;
     JFrame frame = new JFrame();
     JPanel titlePanel = new JPanel();
     JPanel buttonPanel = new JPanel();
@@ -57,6 +58,11 @@ public class Main implements  ActionListener{
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = minimaxMove(board, "X");
+            String rowString = moveByCom.substring(0, 1);
+            String colString = moveByCom.substring(1);
+            int buttonIndex = (Integer.parseInt(rowString)*3) + (Integer.parseInt(colString));
+            buttons[buttonIndex].setForeground(new Color(255,0,0));
+            buttons[buttonIndex].setText("X");
             System.out.println("The moveByCom: " + moveByCom);
             String[][] newBoard = deepCopy(board);
             
@@ -73,7 +79,28 @@ public class Main implements  ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
+        //goes through each button
+        for (int i = 0; i < 9; i++) {
+            if(e.getSource()== buttons[i]){
+                if(player1Turn){
+                    if(buttons[i].getText() == ""){
+                        buttons[i].setForeground(new Color(255,0,0));
+                        buttons[i].setText("X");
+                        player1Turn = false;
+                        textField.setText("O's turn");
+                    }
+                }
+                else {
+                    if(buttons[i].getText() == ""){
+                        buttons[i].setForeground(new Color(0,0,255));
+                        buttons[i].setText("O");
+                        player1Turn = true;
+                        textField.setText("X's turn");
+                    }
 
+                }
+            }
+        }
     }
     public int minimax(String[][] board, String player){
         /* the function checks every possible move and applies it in all the permutations
@@ -122,6 +149,7 @@ public class Main implements  ActionListener{
     }
 
     public String minimaxMove(String[][] board, String player){
+        player1Turn = true;
         textField.setText("X's turn");
         /* for current state of the board, it checks every legal move and then
         finds score of each move. Overall, it will return a move with highest score from the legal moves*/
@@ -152,6 +180,7 @@ public class Main implements  ActionListener{
 
     public void askHuman() {
         textField.setText("O's turn");
+        player1Turn = false;
         String choicePos = "";
         boolean whetherInt = true;
         int rowPosition = 0;
