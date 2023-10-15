@@ -52,6 +52,7 @@ public class Main implements  ActionListener{
 
         boardCreator();
         while(endgameCheck(board)[0] == "false"){
+            textField.setText("X's turn");
             String moveByCom = minimaxMove(board, "X");
             System.out.println("The moveByCom: " + moveByCom);
             String[][] newBoard = deepCopy(board);
@@ -63,6 +64,7 @@ public class Main implements  ActionListener{
                 break;
             }
             // ask human
+            textField.setText("O's turn");
             askHuman();
         }
     }
