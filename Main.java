@@ -57,12 +57,27 @@ public class Main implements  ActionListener{
 
         boardCreator();
         player1Turn = true;
+        boolean firstTime = true;
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = "";
             System.out.println("player1Turn: "+ player1Turn);    
             if(player1Turn){
-                moveByCom = minimaxMove(board, "X");
-                minimaxMoveToBoard(moveByCom);
+                if(firstTime){
+                    Random rand = new Random(); 
+                    int upperbound = 9;
+                    int int_random = rand.nextInt(upperbound);
+                    int firstDigit = int_random/3;
+                    int secondDigit = int_random%3;
+                    //making it string for further checks
+                    String convertedIndex = "" + firstDigit + secondDigit;
+                    moveByCom = convertedIndex;
+                    minimaxMoveToBoard(convertedIndex);
+                    firstTime = false;
+                }
+                else{
+                    moveByCom = minimaxMove(board, "X");
+                    minimaxMoveToBoard(moveByCom);
+                }
                 System.out.println("The moveByCom: " + moveByCom);
                 String[][] newBoard = deepCopy(board);
                 board = changeBoard(newBoard, moveByCom, "X");
@@ -76,7 +91,7 @@ public class Main implements  ActionListener{
             }
             player1Turn = false;
             textField.setText("O's turn");
-            // ask human
+            // ask human runs automatically when button is clicked
         }
         String winnerOrTie = endgameCheck(board)[1];
         if(winnerOrTie== "tie"){
