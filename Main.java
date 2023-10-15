@@ -54,13 +54,13 @@ public class Main implements  ActionListener{
             e.printStackTrace();
         } 
 
-
         boardCreator();
         player1Turn = true;
         boolean firstTime = true;
         while(endgameCheck(board)[0] == "false"){
             String moveByCom = "";
             System.out.println("player1Turn: "+ player1Turn);    
+            //for the first round com enters rand pos
             if(player1Turn){
                 if(firstTime){
                     Random rand = new Random(); 
@@ -81,15 +81,14 @@ public class Main implements  ActionListener{
                 System.out.println("The moveByCom: " + moveByCom);
                 String[][] newBoard = deepCopy(board);
                 board = changeBoard(newBoard, moveByCom, "X");
+                player1Turn = false;
             }
             
             prettyPrint(board);
             if (endgameCheck(board)[0] == "true"){
                 System.out.println("game over!");
-                String winnerOrTie = endgameCheck(board)[1];
                 break;
             }
-            player1Turn = false;
             textField.setText("O's turn");
             // ask human runs automatically when button is clicked
         }
@@ -116,9 +115,7 @@ public class Main implements  ActionListener{
                         askHuman(convertedIndex);
                         buttons[i].setForeground(new Color(0,0,255));
                         buttons[i].setText("O");
-                        System.out.println("action is turning player1turn: "+ player1Turn);
                         textField.setText("X's turn");
-                        player1Turn = true;
                     }
 
                 }
@@ -210,9 +207,9 @@ public class Main implements  ActionListener{
     public void askHuman(String choicePos) {
         //this will happen if changeBoard doesnt work
         System.out.println("Your move is: " + choicePos);
-        player1Turn = true;
         // keep asking until player inputs right format(is a number and 2 digits)
         changeBoard(board, choicePos, "O");
+        player1Turn = true;
     }
 
     public ArrayList<String> getLegalMoves(String playerChar, String[][] board) {
@@ -327,13 +324,17 @@ public class Main implements  ActionListener{
                     return new String[] {"true", board[1][1]};
                 }
         }
+        boolean gameEndState = true;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
                 if(board[i][j].equals(" ")){
-                    System.out.println("game not over yet");
-                    return new String[] {"false", "incomplete"};
+                    gameEndState = false;
                 }
             } 
+        }
+        if(!gameEndState){
+            System.out.println("game not over yet");
+            return new String[] {"false", "incomplete"};
         }
         
         System.out.println("Tie");
