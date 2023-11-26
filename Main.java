@@ -7,6 +7,7 @@ public class Main implements  ActionListener{
     boolean player1Turn;
     JFrame frame = new JFrame();
     JPanel titlePanel = new JPanel();
+    JPanel restartPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
     JLabel textField = new JLabel();//for titlePanel
     JButton[] buttons = new JButton[9];
@@ -32,6 +33,7 @@ public class Main implements  ActionListener{
         textField.setOpaque(true);
         
         titlePanel.setLayout(new BorderLayout());
+        restartPanel.setLayout(new BorderLayout());
         //title in top left corner. (x coord, y coord, length ,height)
         titlePanel.setBounds(0,0,800,100);
         buttonPanel.setLayout(new GridLayout(3, 3));
@@ -94,12 +96,13 @@ public class Main implements  ActionListener{
             // ask human runs automatically when button is clicked
         }
         String winnerOrTie = endgameCheck(board)[1];
-        if(winnerOrTie== "tie"){
+        if(winnerOrTie== "Tie"){
             textField.setText(winnerOrTie);
 
         } else{
             textField.setText(winnerOrTie + " wins!");
         }
+        
     }
 
     @Override
@@ -136,7 +139,7 @@ public class Main implements  ActionListener{
                     return 10;
                 case "O":
                     return -10;
-                case "tie":
+                case "Tie":
                     return 0;
             }
         }
@@ -339,7 +342,7 @@ public class Main implements  ActionListener{
         }
         
         System.out.println("Tie");
-        return new String[] {"true", "tie"};
+        return new String[] {"true", "Tie"};
     }
     public static void main(String[] args) {
        Main game = new Main(); 
