@@ -140,12 +140,13 @@ public class Main implements  ActionListener{
                     return 0;
             }
         }
-        // get all the legal moves for the current player
         ArrayList<String> legalMoves = getLegalMoves(player, board);
         System.out.println("legalMoves: "+ legalMoves);
+        // scores is created everytime there are moves available
+        // the appropriate score will be returned after all possible moves are done(recursively)
+        // easier to think when the state of the board is closer to endgame
         ArrayList<Integer> scores = new ArrayList<>();
         for(String move : legalMoves){
-            // if the game has ended, dont do another move
             if (endgameCheck(board)[0] == "true") {
                 System.out.println("stopped from moving due to endgame");
                 break;
@@ -159,7 +160,6 @@ public class Main implements  ActionListener{
             String opponent = getOpponent(player);
             int score = minimax(newBoard,opponent);
             scores.add(score);
-            // hashtable is a global var
         }
         System.out.println("scores arraylist: "+scores);
         if (player.equals("X")){
@@ -168,13 +168,6 @@ public class Main implements  ActionListener{
             return Collections.min(scores);
         }
     }
-    public void minimaxMoveToBoard(String move){
-        String rowString = move.substring(0, 1);
-        String colString = move.substring(1);
-        int buttonIndex = (Integer.parseInt(rowString)*3) + (Integer.parseInt(colString));
-        buttons[buttonIndex].setForeground(new Color(255,0,0));
-        buttons[buttonIndex].setText("X");
-    }
 
     public String minimaxMove(String[][] board, String player){
         textField.setText("X's turn");
@@ -182,7 +175,7 @@ public class Main implements  ActionListener{
         finds score of each move. Overall, it will return a move with highest score from the legal moves*/
         String bestMove = "";
         int bestScore = -2; //-2 is random starter value
-
+        
         //for every legal move of player X, check the score that player O can get in response
         ArrayList<String> legalMoves = getLegalMoves(player, board);
         if (endgameCheck(board)[0] == "true") {
@@ -202,9 +195,17 @@ public class Main implements  ActionListener{
         System.out.println("bestMove: "+bestMove);
         prettyPrint(board);
         return bestMove;
-
+        
     }
 
+    public void minimaxMoveToBoard(String move){
+        String rowString = move.substring(0, 1);
+        String colString = move.substring(1);
+        int buttonIndex = (Integer.parseInt(rowString)*3) + (Integer.parseInt(colString));
+        buttons[buttonIndex].setForeground(new Color(255,0,0));
+        buttons[buttonIndex].setText("X");
+    }
+    
     public void askHuman(String choicePos) {
         //this will happen if changeBoard doesnt work
         System.out.println("Your move is: " + choicePos);
