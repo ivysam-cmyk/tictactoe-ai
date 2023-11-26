@@ -7,10 +7,10 @@ public class Main implements  ActionListener{
     boolean player1Turn;
     JFrame frame = new JFrame();
     JPanel titlePanel = new JPanel();
-    JPanel restartPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
     JLabel textField = new JLabel();//for titlePanel
     JButton[] buttons = new JButton[9];
+    JButton titleButton = new JButton("Try Again");
     // only allow user to press button during askHuman()
     public static String[][] board;
     public static String[] endgameArray = new String[2];
@@ -23,7 +23,6 @@ public class Main implements  ActionListener{
         frame.setSize(800,800);
         frame.getContentPane().setBackground(new Color(50, 50, 50));
         frame.setLayout(new BorderLayout());
-        frame.setVisible(true);
         
         textField.setBackground(new Color(25, 25 ,25));
         textField.setForeground(new Color(25, 255 ,0));
@@ -33,7 +32,6 @@ public class Main implements  ActionListener{
         textField.setOpaque(true);
         
         titlePanel.setLayout(new BorderLayout());
-        restartPanel.setLayout(new BorderLayout());
         //title in top left corner. (x coord, y coord, length ,height)
         titlePanel.setBounds(0,0,800,100);
         buttonPanel.setLayout(new GridLayout(3, 3));
@@ -50,6 +48,7 @@ public class Main implements  ActionListener{
         titlePanel.add(textField);
         frame.add(titlePanel, BorderLayout.NORTH);
         frame.add(buttonPanel);
+        frame.setVisible(true);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -98,13 +97,15 @@ public class Main implements  ActionListener{
         String winnerOrTie = endgameCheck(board)[1];
         if(winnerOrTie== "Tie"){
             textField.setText(winnerOrTie);
-
+            
         } else{
             textField.setText(winnerOrTie + " wins!");
         }
-        
+        // after game ends add a button to title to retry
+        titlePanel.add(titleButton);
+        titleButton.addActionListener(this);
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e){
         //goes through each button
@@ -124,6 +125,10 @@ public class Main implements  ActionListener{
 
                 }
             }
+        }
+        // if the game has ended and you click the title panel, then restart the game
+        if (endgameCheck(board)[0] == "true" && e.getSource() == titleButton) {
+            Main game = new Main();
         }
     }
     public int minimax(String[][] board, String player){
