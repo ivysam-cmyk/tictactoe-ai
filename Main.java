@@ -62,6 +62,7 @@ public class Main implements  ActionListener{
             System.out.println("player1Turn: "+ player1Turn);    
             //for the first round com enters rand pos
             if(player1Turn){
+                // if 1st time, dont find minimax move, choose random move as it takes too long
                 if(firstTime){
                     Random rand = new Random(); 
                     int upperbound = 9;
@@ -161,7 +162,7 @@ public class Main implements  ActionListener{
             // hashtable is a global var
         }
         System.out.println("scores arraylist: "+scores);
-        if (player == "X"){
+        if (player.equals("X")){
             return Collections.max(scores);
         } else {
             return Collections.min(scores);
@@ -184,10 +185,10 @@ public class Main implements  ActionListener{
 
         //for every legal move of player X, check the score that player O can get in response
         ArrayList<String> legalMoves = getLegalMoves(player, board);
+        if (endgameCheck(board)[0] == "true") {
+            return "";
+        }
         for (String move: legalMoves){
-            if( endgameCheck(board)[0] == "true"){
-                break;
-            }
             String[][] newBoard = deepCopy(board);
             newBoard = changeBoard(newBoard, move, player);
             String opp = getOpponent(player);
