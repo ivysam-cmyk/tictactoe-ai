@@ -5,20 +5,26 @@ import javax.swing.*;
 
 public class Main implements  ActionListener{
     boolean player1Turn;
-    JFrame frame = new JFrame();
-    JPanel titlePanel = new JPanel();
-    JPanel buttonPanel = new JPanel();
-    JLabel textField = new JLabel();//for titlePanel
-    JButton[] buttons = new JButton[9];
-    JButton titleButton = new JButton("Try Again");
+    JFrame frame;
+    JPanel titlePanel;
+    JPanel buttonPanel;
+    JLabel textField;//for titlePanel
+    JButton[] buttons;
+    JButton titleButton;
     // only allow user to press button during askHuman()
     public static String[][] board;
     public static String[] endgameArray = new String[2];
-    // create one scanner and use as opening and closing new scanners spawns Exceptions
-    public Scanner scann = new Scanner(System.in);
 
     // assume com always plays 1st
     Main() {
+        frame = new JFrame();
+        titlePanel = new JPanel();
+        buttonPanel = new JPanel();
+        textField = new JLabel();//for titlePanel
+        buttons = new JButton[9];
+        titleButton = new JButton("Try Again");
+        endgameArray = new String[2];
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800,800);
         frame.getContentPane().setBackground(new Color(50, 50, 50));
@@ -36,7 +42,7 @@ public class Main implements  ActionListener{
         titlePanel.setBounds(0,0,800,100);
         buttonPanel.setLayout(new GridLayout(3, 3));
         buttonPanel.setBackground(new Color(150, 150 ,150));        
-
+        
         for (int i = 0; i < 9; i++) {
             //array is used to keep track of who wins/tie?
             buttons[i] = new JButton();  
@@ -97,39 +103,99 @@ public class Main implements  ActionListener{
         String winnerOrTie = endgameCheck(board)[1];
         if(winnerOrTie== "Tie"){
             textField.setText(winnerOrTie);
-            
         } else{
             textField.setText(winnerOrTie + " wins!");
         }
         // after game ends add a button to title to retry
-        titlePanel.add(titleButton);
         titleButton.addActionListener(this);
+        titlePanel.add(titleButton);
     }
-    
+    private void gameBegin(){
+        player1Turn = true;
+        boolean firstTime = true;
+        while(endgameCheck(board)[0] == "false"){
+            String moveByCom = "";
+            System.out.println("player1Turn: "+ player1Turn);    
+            //for the first round com enters rand pos
+            if(player1Turn){
+                // if 1st time, dont find minimax move, choose random move as it takes too long
+                if(firstTime){
+                    Random rand = new Random(); 
+                    int upperbound = 9;
+                    int int_random = rand.nextInt(upperbound);
+                    int firstDigit = int_random/3;
+                    int secondDigit = int_random%3;
+                    //making it string for further checks
+                    String convertedIndex = "" + firstDigit + secondDigit;
+                    moveByCom = convertedIndex;
+                    minimaxMoveToBoard(convertedIndex);
+                    firstTime = false;
+                }
+                else{
+                    moveByCom = minimaxMove(board, "X");
+                    minimaxMoveToBoard(moveByCom);
+                }
+                System.out.println("The moveByCom: " + moveByCom);
+                String[][] newBoard = deepCopy(board);
+                board = changeBoard(newBoard, moveByCom, "X");
+                player1Turn = false;
+            }
+            
+            prettyPrint(board);
+            if (endgameCheck(board)[0] == "true"){
+                System.out.println("game over!");
+                break;
+            }
+            textField.setText("O's turn");
+            // ask human runs automatically when button is clicked
+        }
+        String winnerOrTie = endgameCheck(board)[1];
+        if(winnerOrTie== "Tie"){
+            textField.setText(winnerOrTie);
+        } else{
+            textField.setText(winnerOrTie + " wins!");
+        }
+        // after game ends add a button to title to retry
+        titleButton.addActionListener(this);
+        titlePanel.add(titleButton);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e){
-        //goes through each button
-        for (int i = 0; i < 9; i++) {
-            if(e.getSource()== buttons[i]){
-                if(!player1Turn) {
-                    if(buttons[i].getText() == ""){
-                        int firstDigit = i/3;
-                        int secondDigit = i%3;
-                        //making it string for further checks
-                        String convertedIndex = "" + firstDigit + secondDigit;
-                        askHuman(convertedIndex);
-                        buttons[i].setForeground(new Color(0,0,255));
-                        buttons[i].setText("O");
-                        textField.setText("X's turn");
-                    }
+        if (endgameCheck(board)[0] == "true" && e.getSource() == titleButton) {
+            // call function that will clear, the board, table
+            boardCreator();
+            prettyPrint(board);
+            buttonPanel.setBackground(new Color(150, 150 ,150));        
+            for (int i = 0; i < board.length*board.length; i++) {
+                buttons[i].setText("");
+            }
+            titlePanel.remove(titleButton);
+            textField.setText("Tic Tac Toe");
+            titlePanel.add(textField);
+            gameBegin();
+        }
+        else{
+            //goes through each button
+            for (int i = 0; i < 9; i++) {
+                if(e.getSource()== buttons[i]){
+                    if(!player1Turn) {
+                        if(buttons[i].getText() == ""){
+                            int firstDigit = i/3;
+                            int secondDigit = i%3;
+                            //making it string for further checks
+                            String convertedIndex = "" + firstDigit + secondDigit;
+                            askHuman(convertedIndex);
+                            buttons[i].setForeground(new Color(0,0,255));
+                            buttons[i].setText("O");
+                            textField.setText("X's turn");
+                        }
 
+                    }
                 }
             }
         }
         // if the game has ended and you click the title panel, then restart the game
-        if (endgameCheck(board)[0] == "true" && e.getSource() == titleButton) {
-            Main game = new Main();
-        }
     }
     public int minimax(String[][] board, String player){
         /* the function checks every possible move and applies it in all the permutations
