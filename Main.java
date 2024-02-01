@@ -150,10 +150,6 @@ public class Main implements  ActionListener{
         // easier to think when the state of the board is closer to endgame
         ArrayList<Integer> scores = new ArrayList<>();
         for(String move : legalMoves){
-            if (endgameCheck(board)[0] == "true") {
-                System.out.println("stopped from moving due to endgame");
-                break;
-            }
             System.out.println("making another move: "+ move);
             // change the board
             String[][] newBoard = deepCopy(board);
