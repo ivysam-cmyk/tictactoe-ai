@@ -206,9 +206,7 @@ public class Main implements  ActionListener{
     }
     
     public void askHuman(String choicePos) {
-        //this will happen if changeBoard doesnt work
         System.out.println("Your move is: " + choicePos);
-        // keep asking until player inputs right format(is a number and 2 digits)
         changeBoard(board, choicePos, "O");
         player1Turn = true;
     }
