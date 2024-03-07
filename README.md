@@ -1,5 +1,5 @@
 # tictactoe-ai
-#### Video Demo: 
+
 #### Description: Uses Minimax Algorithm to play tic tac toe moves against human player
 
 All of the code is within Main.java.
